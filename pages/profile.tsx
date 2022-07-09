@@ -8,7 +8,7 @@ const ProfilePage: React.FC<TabProps> = ({route}) => {
   const dispatch = useAppDispatch();
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>여기는 {route.name} 페이지에요</Text>
+      <Text style={styles.greeting}>여기는 ㅎㅎㅎ {route.name} 페이지에요</Text>
       <Button
         title="LOG Out"
         onPress={() =>
