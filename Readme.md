@@ -40,6 +40,9 @@
 >    ### 2022.7.9(토)
 >    - 
 >    - 
+>    ### 2022.7.11(월)
+>    - 
+>    - 
 
 4. ### Service
 
@@ -65,4 +68,8 @@
 -라이브러리
 react-native-calendars
 date-fns
-ios-deploy 
+ios-deploy
+redux
+axios
+redux-thunk
+react-native-animatable --save

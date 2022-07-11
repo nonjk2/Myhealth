@@ -43,6 +43,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-Myhealth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Myhealth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Myhealth/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Myhealth-MyhealthTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Myhealth-MyhealthTests.release.xcconfig"; path = "Target Support Files/Pods-Myhealth-MyhealthTests/Pods-Myhealth-MyhealthTests.release.xcconfig"; sourceTree = "<group>"; };
+		B26FBD58287C241200838F14 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* Myhealth */ = {
 			isa = PBXGroup;
 			children = (
+				B26FBD57287C23B500838F14 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -135,6 +137,14 @@
 				00E356EE1AD99517003FC87E /* MyhealthTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B26FBD57287C23B500838F14 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B26FBD58287C241200838F14 /* Ionicons.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {

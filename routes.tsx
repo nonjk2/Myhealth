@@ -18,6 +18,25 @@ import ProfilePage from './pages/profile';
 import {useSelector} from 'react-redux';
 import {RootState} from './store/reducer';
 import ActivePage from './pages/active';
+import TabButton from './components/customTab';
+
+const items = [
+  {
+    activeIcon: 'calendar-outline',
+    label: '홈',
+    inactiveIcon: 'calendar',
+  },
+  {
+    activeIcon: 'map-outline',
+    label: '시작하기',
+    inactiveIcon: 'map',
+  },
+  {
+    activeIcon: 'person-circle-outline',
+    label: '프로필',
+    inactiveIcon: 'person-circle',
+  },
+];
 
 export enum HomeScreens {
   Auth = 'Auth',
@@ -49,10 +68,47 @@ const Stack = createNativeStackNavigator<HomeParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 const TabNav = (): React.ReactElement => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name={TabScreens.Home} component={HomePage} />
-      <Tab.Screen name={TabScreens.Active} component={ActivePage} />
-      <Tab.Screen name={TabScreens.Profile} component={ProfilePage} />
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          position: 'absolute',
+          bottom: 32,
+          right: 16,
+          left: 16,
+          borderRadius: 15,
+          backgroundColor: '#5585E8DD',
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowColor: '#000',
+          shadowOpacity: 0.25,
+          elevation: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      }}>
+      <Tab.Screen
+        name={TabScreens.Home}
+        component={HomePage}
+        options={{
+          tabBarButton: props => <TabButton {...props} item={items[0]} />,
+        }}
+      />
+      <Tab.Screen
+        name={TabScreens.Active}
+        component={ActivePage}
+        options={{
+          tabBarButton: props => <TabButton {...props} item={items[1]} />,
+        }}
+      />
+      <Tab.Screen
+        name={TabScreens.Profile}
+        component={ProfilePage}
+        options={{
+          tabBarButton: props => <TabButton {...props} item={items[2]} />,
+        }}
+      />
     </Tab.Navigator>
   );
 };

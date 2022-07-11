@@ -1,4 +1,11 @@
-import {addDays, format, getDate, isSameDay, startOfWeek} from 'date-fns';
+import {
+  addDays,
+  format,
+  getDate,
+  getDay,
+  isSameDay,
+  startOfWeek,
+} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -32,6 +39,7 @@ export const getWeekDays = (date: Date): WeekDay[] => {
 };
 const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
   const [week, setWeek] = useState<WeekDay[]>([]);
+  const TodayDate = format(new Date(), 'EEE', {locale: ko});
 
   useEffect(() => {
     const weekDays = getWeekDays(date);
@@ -52,7 +60,14 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
 
         return (
           <View style={styles.weekDayItem} key={weekDay.formatted}>
-            <Text style={styles.weekDayText}>{weekDay.formatted}</Text>
+            <Text
+              style={
+                weekDay.formatted === TodayDate
+                  ? styles.ToDayText
+                  : styles.weekDayText
+              }>
+              {weekDay.formatted}
+            </Text>
             <TouchableOpacity
               onPress={() => onChange(weekDay.date)}
               style={touchable}>
@@ -70,6 +85,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
+  },
+  ToDayText: {
+    color: '#5585E8',
+    marginVertical: 10,
+    fontSize: 18,
   },
   weekDayText: {
     color: 'gray',
