@@ -42,7 +42,6 @@ export enum HomeScreens {
   Auth = 'Auth',
   Tab = 'Tab',
 }
-
 export enum TabScreens {
   Home = 'Home',
   Profile = 'Profile',

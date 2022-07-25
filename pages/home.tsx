@@ -71,10 +71,10 @@ const HomePage: React.FC<TabProps> = ({}) => {
   return (
     <View style={styles.container}>
       <WeekCalendar date={date} onChange={newDate => setDate(newDate)} />
-      <FlatList
+      {/* <FlatList
         data={DATA}
         renderItem={({item}) => <MyActivity data={item} />}
-      />
+      /> */}
     </View>
   );
 };
