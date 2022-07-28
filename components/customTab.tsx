@@ -5,10 +5,10 @@ import * as Animatable from 'react-native-animatable';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 const animate1 = {
   0: {scale: 0.5, translateY: 0},
-  1: {scale: 1.2, translateY: -8},
+  1: {scale: 1.3, translateY: -15},
 };
 const animate2 = {
-  0: {scale: 1.2, translateY: -8},
+  0: {scale: 1.2, translateY: -15},
   1: {scale: 1, translateY: 0},
 };
 // const plusanimate1 = {
@@ -21,10 +21,10 @@ const plusanimate2 = {
 };
 const circle = {
   0: {scale: 1},
-  0.3: {scale: 0.5},
-  0.5: {scale: 0.7},
-  0.8: {scale: 0.9},
-  1: {scale: 1},
+  0.3: {scale: 0.3},
+  0.7: {scale: 0.5},
+  1: {scale: 0.85},
+  // 1: {scale: 0.9},
 };
 const circle2 = {0: {scale: 1}, 1: {scale: 1}};
 interface Prop extends BottomTabBarButtonProps {
@@ -66,11 +66,11 @@ const TabButton: React.FC<Prop> = props => {
             color={focused ? '#101011' : '#fff'}
             style={{}}
           />
-          <Text style={focused ? styles.tablabelFocus : styles.tablabel}>
-            {item.label}
-          </Text>
         </Animatable.View>
       </Animatable.View>
+      <Text style={focused ? styles.tablabelFocus : styles.tablabel}>
+        {item.label}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -78,37 +78,39 @@ const TabButton: React.FC<Prop> = props => {
 const styles = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', top: 13, alignItems: 'center'},
   greeting: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'rgb(147, 224, 228)',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#85adfd',
     alignItems: 'center',
     justifyContent: 'center',
   },
   tabButton: {
     // ...StyleSheet.absoluteFillObject,
     borderTopWidth: 0,
-    borderColor: '#5585E8',
+    // borderColor: '#5585E8',
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
   tabButtonFocus: {
     ...StyleSheet.absoluteFillObject,
-
-    borderColor: '#000000',
-    borderRadius: 25,
+    // borderWidth: 3,
+    top: -0.5,
+    backgroundColor: '#fff',
+    borderColor: '#85adfd',
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
   tablabel: {
-    fontSize: 8,
+    fontSize: 13,
     color: '#000',
     marginTop: 4,
   },
   tablabelFocus: {
-    fontSize: 8,
-    color: '#5585E8',
+    fontSize: 13,
+    color: '#000',
     marginTop: 1.5,
   },
 });

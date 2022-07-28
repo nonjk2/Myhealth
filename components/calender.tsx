@@ -1,22 +1,16 @@
-import {
-  addDays,
-  format,
-  getDate,
-  getDay,
-  isSameDay,
-  startOfWeek,
-} from 'date-fns';
+import {addDays, format, getDate, startOfWeek} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Agenda, AgendaSchedule, LocaleConfig} from 'react-native-calendars';
-
-const healthData: AgendaSchedule = {
-  '2022-07-22': [{name: 'item 1 - any js object'}],
-  '2022-07-23': [{name: 'item 2 - any js object', height: 80}],
-  '2022-07-24': [],
-  '2022-07-25': [{name: 'item 3 - any js object'}, {name: 'any js object'}],
-};
+import {
+  Agenda,
+  AgendaEntry,
+  AgendaSchedule,
+  DateData,
+  LocaleConfig,
+} from 'react-native-calendars';
+import {Avatar, Card} from 'react-native-paper';
+import {LOCALEKR} from '../src/data/calenderLocale';
 
 type Props = {
   date: Date;
@@ -46,65 +40,64 @@ export const getWeekDays = (date: Date): WeekDay[] => {
   return final;
 };
 
-LocaleConfig.locales.fr = {
-  monthNames: [
-    'Janvier',
-    'Février',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juillet',
-    'Août',
-    'Septembre',
-    'Octobre',
-    'Novembre',
-    'Décembre',
-  ],
-  monthNamesShort: [
-    'Janv.',
-    'Févr.',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juil.',
-    'Août',
-    'Sept.',
-    'Oct.',
-    'Nov.',
-    'Déc.',
-  ],
-  dayNames: [
-    '일요일',
-    '월요일',
-    '화요일',
-    '수요일',
-    '목요일',
-    '금요일',
-    '토요일',
-  ],
-  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-  today: "Aujourd'hui",
-};
+LocaleConfig.locales.fr = LOCALEKR;
 LocaleConfig.defaultLocale = 'fr';
 const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
-  const [week, setWeek] = useState<WeekDay[]>([]);
-  const TodayDate = format(new Date(), 'EEE', {locale: ko});
+  const [items, setItems] = useState<AgendaSchedule>({});
+  const loadItems = (day: DateData) => {
+    setTimeout(() => {
+      for (let i = -15; i < 0; i++) {
+        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = timeToString(time);
 
-  useEffect(() => {
-    const weekDays = getWeekDays(date);
-    setWeek(weekDays);
-  }, [date]);
+        if (!items[strTime]) {
+          items[strTime] = [];
+          const numItems = Math.floor(Math.random() * 3 + 1);
+          for (let j = 0; j < numItems; j++) {
+            items[strTime].push({
+              name: 'Item for ' + strTime + ' #' + j,
+              height: Math.max(50, Math.floor(Math.random() * 150)),
+              day: strTime,
+            });
+          }
+        }
+      }
+      const newItems: AgendaSchedule = {};
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+      setItems(newItems);
+    }, 1000);
+  };
 
+  const timeToString = (time: number) => {
+    const date = new Date(time);
+    return date.toISOString().split('T')[0];
+  };
+
+  const renderItem = (item: AgendaEntry) => {
+    return (
+      <TouchableOpacity style={{marginRight: 10, marginTop: 17}}>
+        <Card>
+          <Card.Content>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <Text>{item.name}</Text>
+              <Avatar.Text label="Hi" />
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    );
+  };
   return (
     <>
       <Agenda
-        items={healthData}
-        // // Callback that gets called when items for a certain month should be loaded (month became visible)
-        // loadItemsForMonth={month => {
-        //   console.log('trigger items loading');
-        // }}
+        items={items}
         // // Callback that fires when the calendar is opened or closed
         // // onCalendarToggled={calendarOpened => {
         // //   console.log(calendarOpened);
@@ -120,23 +113,18 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
         // // Initially selected day
         // selected={'2022-05-16'}
         // // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        minDate={'2020-05-10'}
+        // minDate={'2020-05-10'}
         // // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-        maxDate={'2025-05-30'}
+        // maxDate={'2025-05-30'}
         // // Max amount of months allowed to scroll to the past. Default = 50
         // pastScrollRange={50}
         // // Max amount of months allowed to scroll to the future. Default = 50
         // futureScrollRange={50}
         // // Specify how each item should be rendered in agenda
-        renderItem={(item, firstItemInDay) => {
-          return (
-            <View>
-              <Text>{item.day}</Text>
-              <Text>{item.name}</Text>
-            </View>
-          );
-        }}
-        // // Specify how each date should be rendered. day can be undefined if the item is not first in that day
+        pastScrollRange={10}
+        loadItemsForMonth={loadItems}
+        renderItem={renderItem}
+        showOnlySelectedDayItems
         // renderDay={(day, item) => {
         //   return <View />;
         // }}
@@ -169,11 +157,11 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
         // // If disabledByDefault={true} dates flagged as not disabled will be enabled. Default = false
         // disabledByDefault={true}
         // // If provided, a standard RefreshControl will be added for "Pull to Refresh" functionality. Make sure to also set the refreshing prop correctly
-        // onRefresh={() => console.log('refreshing...')}
+        onRefresh={() => console.log('refreshing...')}
         // // Set this true while waiting for new data from a refresh
-        // refreshing={false}
+        // refreshing={true}
         // // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView
-        // // refreshControl={null}
+        // refreshControl={null}
         // // Agenda theme
         // theme={{
         //   // ...calendarTheme,

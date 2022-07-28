@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlatList} from 'react-native';
 import {
   Dimensions,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {TabProps} from '../routes';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {Avatar} from 'react-native-paper';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -59,7 +60,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           onPress={() => ActiveSetting(item)}
           activeOpacity={0.7}
           style={styles.itemsContainer}>
-          <View style={styles.cicletext} />
+          <Avatar.Text label="J" />
           <Text style={styles.itemLabel}>{item.title}</Text>
         </TouchableOpacity>
       </View>

@@ -71,11 +71,11 @@ const TabNav = (): React.ReactElement => {
       screenOptions={{
         tabBarStyle: {
           position: 'absolute',
-          bottom: 32,
+          bottom: 24,
           right: 16,
           left: 16,
           borderRadius: 15,
-          backgroundColor: '#5585E8DD',
+          backgroundColor: '#85adfd',
           shadowOffset: {
             width: 0,
             height: 10,
