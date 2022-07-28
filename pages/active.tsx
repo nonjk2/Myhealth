@@ -1,93 +1,93 @@
-import React, {useCallback, useState} from 'react';
-import {FlatList} from 'react-native';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {TabProps} from '../routes';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import {Avatar} from 'react-native-paper';
+import {Card} from 'react-native-paper';
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-const exerciseData = [
-  {
-    type: 1,
-    id: 1,
-    key: '메인1',
-    title: '스트레칭',
-  },
-  {
-    type: 1,
-    id: 2,
-    key: '메인2',
-    title: '유산소운동',
-  },
-  {
-    type: 1,
-    id: 3,
-    key: '메인3',
-    title: '스트렝스 & 기구',
-  },
-  {
-    type: 1,
-    id: 4,
-    key: '메인4',
-    title: '맨몸 운동',
-  },
-];
 interface Props {
   type: number;
   id: number;
   key: string;
   title: string;
 }
+
 const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
-  const [ActiveType, setActiveType] = useState('');
+  const [currentTime, setCurrentTime] = useState<string>(
+    format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
+  );
+  const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(neonAnimate, {
+          duration: 500,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(neonAnimate, {
+          duration: 100,
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+        Animated.timing(neonAnimate, {
+          duration: 400,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]),
+      {
+        iterations: -1,
+      }
+    ).start();
+  }, [neonAnimate]);
 
-  const ActiveSetting = (item: Props) => {
-    setActiveType(item.title);
-  };
-
-  const Myitems = useCallback((item: Props) => {
-    return (
-      <View style={styles.viewContainer}>
-        <TouchableOpacity
-          onPress={() => ActiveSetting(item)}
-          activeOpacity={0.7}
-          style={styles.itemsContainer}>
-          <Avatar.Text label="J" />
-          <Text style={styles.itemLabel}>{item.title}</Text>
-        </TouchableOpacity>
-      </View>
-    );
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko}));
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
-  const keyExtractor = useCallback((item: {id: any}) => {
-    return item.id;
-  }, []);
-
   return (
     <View style={styles.container}>
-      {ActiveType === '' ? (
-        <FlatList
-          data={exerciseData}
-          renderItem={({item}) => Myitems(item)}
-          keyExtractor={keyExtractor}
-          scrollEnabled={false}
-          numColumns={2}
-        />
-      ) : (
-        <View>
-          <Text>{ActiveType}</Text>
-          <TouchableOpacity onPress={() => setActiveType('')}>
-            <IonIcon name="arrow-back" size={22} />
-          </TouchableOpacity>
-        </View>
-      )}
+      <Card>
+        <Card.Content style={{alignItems: 'center'}}>
+          <Animated.Text
+            style={[
+              styles.neon,
+              {
+                shadowOpacity: neonAnimate,
+                shadowColor: 'cyan',
+                color: 'cyan',
+                fontSize: 20,
+              },
+            ]}>
+            {currentTime.split(' ')[0].split('.')[0]}년{' '}
+            {currentTime.split(' ')[0].split('.')[1]}월{' '}
+            {currentTime.split(' ')[0].split('.')[2]}일
+          </Animated.Text>
+          <Animated.Text
+            style={[
+              styles.neon,
+              {
+                shadowOpacity: neonAnimate,
+                shadowColor: 'cyan',
+                color: 'cyan',
+                fontSize: 25,
+                lineHeight: 35,
+              },
+            ]}>
+            {currentTime.split(' ')[1].split(':')[0]}시{' '}
+            {currentTime.split(' ')[1].split(':')[1]}분{' '}
+            {currentTime.split(' ')[1].split(':')[2]}초
+          </Animated.Text>
+        </Card.Content>
+      </Card>
     </View>
   );
 };
@@ -95,18 +95,14 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     // backgroundColor: 'blue',
   },
-  viewContainer: {
-    backgroundColor: '#fdd',
-    width: WIDTH * 0.48,
-    height: HEIGHT * 0.35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 3,
-    marginVertical: 5,
+  neon: {
+    // shadowOpacity: 0.8,
+    shadowRadius: 16,
+    fontWeight: '700',
   },
+  neonTimeOne: {},
   itemLabel: {
     alignSelf: 'center',
   },
