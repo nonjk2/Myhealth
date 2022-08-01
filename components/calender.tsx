@@ -125,6 +125,7 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
         loadItemsForMonth={loadItems}
         renderItem={renderItem}
         showOnlySelectedDayItems
+        // firstDay={4}
         // renderDay={(day, item) => {
         //   return <View />;
         // }}

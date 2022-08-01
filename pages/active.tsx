@@ -55,7 +55,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
   }, []);
   return (
     <View style={styles.container}>
-      <Card>
+      <Card style={styles.cardContainer}>
         <Card.Content style={{alignItems: 'center'}}>
           <Animated.Text
             style={[
@@ -106,11 +106,8 @@ const styles = StyleSheet.create({
   itemLabel: {
     alignSelf: 'center',
   },
-  itemsContainer: {
-    height: WIDTH * 0.2,
-    width: WIDTH * 0.2,
-    alignItems: 'center',
-    justifyContent: 'center',
+  cardContainer: {
+    margin: 5,
   },
   cicletext: {
     width: '80%',
