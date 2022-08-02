@@ -1,25 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, ScrollView, TouchableOpacity} from 'react-native';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Animated, FlatList, TouchableOpacity} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {TabProps} from '../routes';
 import {Avatar, Card} from 'react-native-paper';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import Undong from '../components/undong';
-import {UndongType} from '../types/undong';
+import {UndongItemType, UndongType} from '../types/undong';
 
-const UndongDATA: UndongType = [
-  {
-    startdate: '8월 1일',
-    name: '',
-    reps: 0,
-    sets: 0,
-    enddate: '',
-    ActiveTime: '',
-  },
-];
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
@@ -67,44 +56,46 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const renderUndong = ({item}: {item: UndongItemType}) => {
+    return <Undong item={item} />;
+  };
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <Card style={styles.cardContainer}>
-          <Card.Content style={{alignItems: 'center'}}>
-            <Animated.Text
-              style={[
-                styles.neon,
-                {
-                  shadowOpacity: neonAnimate,
-                  shadowColor: 'cyan',
-                  color: 'cyan',
-                  fontSize: 20,
-                },
-              ]}>
-              {currentTime.split(' ')[0].split('.')[0]}년{' '}
-              {currentTime.split(' ')[0].split('.')[1]}월{' '}
-              {currentTime.split(' ')[0].split('.')[2]}일
-            </Animated.Text>
-            <Animated.Text
-              style={[
-                styles.neon,
-                {
-                  shadowOpacity: neonAnimate,
-                  shadowColor: 'cyan',
-                  color: 'cyan',
-                  fontSize: 25,
-                  lineHeight: 35,
-                },
-              ]}>
-              {currentTime.split(' ')[1].split(':')[0]}시{' '}
-              {currentTime.split(' ')[1].split(':')[1]}분{' '}
-              {currentTime.split(' ')[1].split(':')[2]}초
-            </Animated.Text>
-          </Card.Content>
-        </Card>
-        <Undong undongData={undongData} />
-      </ScrollView>
+      <Card style={styles.cardContainer}>
+        <Card.Content style={{alignItems: 'center'}}>
+          <Animated.Text
+            style={[
+              styles.neon,
+              {
+                shadowOpacity: neonAnimate,
+                shadowColor: 'cyan',
+                color: 'cyan',
+                fontSize: 20,
+              },
+            ]}>
+            {currentTime.split(' ')[0].split('.')[0]}년{' '}
+            {currentTime.split(' ')[0].split('.')[1]}월{' '}
+            {currentTime.split(' ')[0].split('.')[2]}일
+          </Animated.Text>
+          <Animated.Text
+            style={[
+              styles.neon,
+              {
+                shadowOpacity: neonAnimate,
+                shadowColor: 'cyan',
+                color: 'cyan',
+                fontSize: 25,
+                lineHeight: 35,
+              },
+            ]}>
+            {currentTime.split(' ')[1].split(':')[0]}시{' '}
+            {currentTime.split(' ')[1].split(':')[1]}분{' '}
+            {currentTime.split(' ')[1].split(':')[2]}초
+          </Animated.Text>
+        </Card.Content>
+      </Card>
+      <FlatList data={undongData} renderItem={renderUndong} />
       <TouchableOpacity
         style={styles.plusbutton}
         onPress={() =>
