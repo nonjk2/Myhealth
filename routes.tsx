@@ -99,6 +99,7 @@ const TabNav = (): React.ReactElement => {
         component={ActivePage}
         options={{
           tabBarButton: props => <TabButton {...props} item={items[1]} />,
+          headerShown: true,
         }}
       />
       <Tab.Screen
