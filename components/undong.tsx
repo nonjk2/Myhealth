@@ -9,8 +9,12 @@ const Undong = ({item}: {item: UndongItemType}) => {
   const OnchangeName = useCallback((text: any) => {
     setName(text);
   }, []);
+
+  const EraseText = useCallback(() => {
+    setName('');
+  }, []);
   return (
-    <View key={item.startdate}>
+    <View key={item.startdate} style={styles.itemView}>
       <Card style={[toggle && styles.toggleOnCard, styles.toggleOffCard]}>
         <Card.Actions>
           <TextInput
@@ -19,6 +23,7 @@ const Undong = ({item}: {item: UndongItemType}) => {
             onChangeText={text => OnchangeName(text)}
             value={name}
             style={styles.nameTextInput}
+            right={<TextInput.Icon name="eye" onPress={EraseText} />}
           />
           <Button icon="chevron-down" onPress={() => setToggle(prev => !prev)}>
             자세히 보기
@@ -29,10 +34,12 @@ const Undong = ({item}: {item: UndongItemType}) => {
   );
 };
 const styles = StyleSheet.create({
+  itemView: {marginBottom: 10},
   toggleOnCard: {
     height: 320,
+    justifyContent: 'center',
   },
-  toggleOffCard: {},
+  toggleOffCard: {justifyContent: 'center'},
   cardContainer: {},
   nameTextInput: {width: '60%'},
 });
