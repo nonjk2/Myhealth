@@ -107,7 +107,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
               reps: 0,
               sets: 0,
               enddate: '',
-              ActiveTime: '',
+              ActiveTime: 0,
             },
           ])
         }>

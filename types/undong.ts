@@ -4,7 +4,7 @@ export type UndongType = {
   reps?: number | undefined;
   sets?: number | undefined;
   enddate?: string | undefined;
-  ActiveTime?: string | undefined;
+  ActiveTime?: number | undefined;
 }[];
 
 export type UndongItemType = {
@@ -13,5 +13,5 @@ export type UndongItemType = {
   reps?: number | undefined;
   sets?: number | undefined;
   enddate?: string | undefined;
-  ActiveTime?: string | undefined;
+  ActiveTime?: number | undefined;
 };

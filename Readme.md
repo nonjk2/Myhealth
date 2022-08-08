@@ -74,3 +74,6 @@ axios
 redux-thunk
 react-native-animatable --save
 react-native-paper
+
+참조 ##Link
+[타이머](https://exilee20c.tistory.com/entry/%EC%9B%B9%EC%9C%BC%EB%A1%9C-%EB%82%99%EC%84%9C%ED%95%98%EA%B8%B03%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%A1%9C-%EC%8A%A4%ED%83%91%EC%9B%8C%EC%B9%98%EB%A5%BC-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EC%9E%90)
