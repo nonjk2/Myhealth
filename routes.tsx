@@ -70,11 +70,7 @@ const TabNav = (): React.ReactElement => {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 24,
-          right: 16,
-          left: 16,
-          borderRadius: 15,
+          // position: 'relative',
           backgroundColor: '#85adfd',
           shadowOffset: {
             width: 0,
@@ -99,7 +95,8 @@ const TabNav = (): React.ReactElement => {
         component={ActivePage}
         options={{
           tabBarButton: props => <TabButton {...props} item={items[1]} />,
-          headerShown: true,
+          headerShown: false,
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Tab.Screen

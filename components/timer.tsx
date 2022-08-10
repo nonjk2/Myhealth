@@ -1,3 +1,5 @@
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {List} from 'react-native-paper';
@@ -85,6 +87,7 @@ const StopWatch: React.FC<timerProps> = ({
       const newLapTimes: any = Array.from(lapTimes);
       newLapTimes.push(Date.now() - startDate + pausedTime);
       setLapTimes(newLapTimes);
+      console.log(lapTimes);
     }
   }, [active, lapTimes, pausedTime, startDate]);
   const handleResetClick = useRef(() => {
@@ -119,37 +122,50 @@ const StopWatch: React.FC<timerProps> = ({
 
   return (
     <View style={[]}>
-      <View style={styles.timeStamp}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: ' blue',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <Text>{getTimesFromMillis(elapsedTime).minutes.toString()} : </Text>
-          <Text>{getTimesFromMillis(elapsedTime).seconds.toString()} </Text>
-          {/* <Text>{getTimesFromMillis(elapsedTime).millis.toString()} </Text> */}
-        </View>
-        <View style={{flex: 1, backgroundColor: 'red'}}>
-          {/* <ListView */}
-          <View />
-        </View>
-      </View>
       <View style={styles.tabbarContainer}>
-        <TouchableOpacity onPress={handleLapTimeClick} style={styles.icontabs}>
-          <Text>기록하기</Text>
+        <TouchableOpacity
+          onPress={active ? handleLapTimeClick : handleResetClick.current}
+          style={styles.icontabs}>
+          {active ? (
+            <Text style={styles.TextFont}>Lab</Text>
+          ) : (
+            <Text style={styles.TextFont}>재설정</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={active ? handleStopClick : handleStartClick}
           style={styles.icontabs}>
-          <IonIcon size={36} name={active ? 'pause' : 'play-circle'} />
+          <IonIcon
+            size={32}
+            color="#fff"
+            name={active ? 'pause' : 'play-circle'}
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleResetClick.current}
-          style={styles.icontabs}>
-          <IonIcon size={36} name={'refresh'} />
-        </TouchableOpacity>
+      </View>
+      <View>
+        <List.Section>
+          <List.Subheader
+            style={{color: '#fff', fontSize: 24, fontWeight: '200'}}>
+            {undongDetail.name}
+          </List.Subheader>
+          {lapTimes.map((item, index) => {
+            return (
+              <List.Item
+                key={item}
+                title={format(new Date(item), 'mm : ss ', {
+                  locale: ko,
+                })}
+                right={() => (
+                  <Text style={{color: '#fff', marginRight: '15%'}}>
+                    {index}세트
+                  </Text>
+                )}
+                titleStyle={{color: '#fff'}}
+                left={() => <List.Icon icon="folder" color="#fff" />}
+              />
+            );
+          })}
+        </List.Section>
       </View>
     </View>
   );
@@ -165,10 +181,12 @@ const styles = StyleSheet.create({
   },
   tabbarContainer: {
     flexDirection: 'row',
-    // justifyContent: 'center',
-    alignItems: 'stretch',
-    width: '100%',
+    borderBottomColor: '#a3a3a3',
+    borderWidth: 1,
+    height: 60,
+    // width: '100%',
   },
+  TextFont: {color: '#fff'},
   icontabs: {flex: 1, alignItems: 'center', justifyContent: 'center'},
 });
 export default StopWatch;

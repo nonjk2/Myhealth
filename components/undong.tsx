@@ -1,16 +1,18 @@
-import React, {useCallback, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {Button, Card, TextInput} from 'react-native-paper';
 import {UndongItemType} from '../types/undong';
 import StopWatch from './timer';
 import Collapsible from 'react-native-collapsible';
-
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
+const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
 const Undong = ({item}: {item: UndongItemType}) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [active, setActive] = useState(false);
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState<boolean>(true);
   const [undongDetail, setUndongDetail] = useState(item);
-
   const OnchangeName = useCallback(
     (text: any) => {
       setUndongDetail({...undongDetail, name: text});
@@ -42,64 +44,85 @@ const Undong = ({item}: {item: UndongItemType}) => {
       return Object.assign({}, acc, {[unitKey]: source});
     }, {});
   };
-  const renderHeader = section => {
-    return <View />;
-  };
-  const renderContent = section => {
-    return (
-      <Card.Content>
-        <Text>
-          운동 시작 시간 : {item.startdate.split(' ')[1].split(':')[0]}시{' '}
-          {item.startdate.split(' ')[1].split(':')[1]}분{' '}
-          {item.startdate.split(' ')[1].split(':')[2]}초
-        </Text>
-        <View style={{marginTop: 10}}>
-          <StopWatch
-            undongDetail={undongDetail}
-            setUndongDetail={setUndongDetail}
-            active={active}
-            setActive={setActive}
-            elapsedTime={elapsedTime}
-            setElapsedTime={setElapsedTime}
-          />
-        </View>
-      </Card.Content>
-    );
-  };
+
   return (
     <View key={item.startdate} style={styles.itemView}>
-      <Card style={[active && styles.toggleOnCard, styles.toggleOffCard]}>
-        <Card.Content>
-          <TextInput
-            placeholder="운동이름을 써넣어주세요"
-            // mode="outlined"
-            onChangeText={text => OnchangeName(text)}
-            value={undongDetail.name}
-            style={styles.nameTextInput}
-            right={<TextInput.Icon name="eye" onPress={EraseText} />}
-          />
+      <Card style={[active && styles.toggleOnCard]}>
+        <Card.Content style={{backgroundColor: '#000'}}>
+          <View style={{flexDirection: 'row'}}>
+            <TextInput
+              // placeholder="운동이름을 써넣어주세요"
+              mode="outlined"
+              // collapsable={true}
+              onChangeText={text => OnchangeName(text)}
+              value={undongDetail.name}
+              style={styles.nameTextInput}
+              theme={{
+                colors: {
+                  placeholder: 'white',
+                  text: 'white',
+                  primary: 'white',
+                  // underlineColor: 'transparent',
+                  background: '#000',
+                },
+              }}
+              underlineColor={'#fff'}
+              selectionColor={'#fff'}
+              placeholderTextColor={'#fff'}
+              activeOutlineColor={'#fff'}
+              activeUnderlineColor={'#fff'}
+              label="운동이름"
+              outlineColor="#fff"
+              right={
+                undongDetail.name ? (
+                  <TextInput.Icon
+                    name="close"
+                    color="white"
+                    onPress={EraseText}
+                  />
+                ) : null
+              }
+            />
 
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: ' blue',
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <Text>{getTimesFromMillis(elapsedTime).minutes.toString()} : </Text>
-            <Text>{getTimesFromMillis(elapsedTime).seconds.toString()} </Text>
-            {/* <Text>{getTimesFromMillis(elapsedTime).millis.toString()} </Text> */}
+            <View style={styles.cardContainer}>
+              <View style={styles.timer}>
+                <Text style={styles.CardTimer}>
+                  {format(new Date(elapsedTime), 'mm : ss ', {
+                    locale: ko,
+                  })}
+                </Text>
+              </View>
+              <View style={styles.active}>
+                <Text style={styles.CardTimer}>
+                  {active ? '운동중' : '대기중'}
+                </Text>
+              </View>
+            </View>
           </View>
-          <Button onPress={() => setToggle(prev => !prev)}>펼치기</Button>
+          <Button onPress={() => setToggle(prev => !prev)}>
+            {toggle ? '펼치기' : '접기'}
+          </Button>
 
           <Collapsible collapsed={toggle}>
-            <Card.Content>
-              <Text>
-                운동 시작 시간 : {item.startdate.split(' ')[1].split(':')[0]}시{' '}
-                {item.startdate.split(' ')[1].split(':')[1]}분{' '}
-                {item.startdate.split(' ')[1].split(':')[2]}초
-              </Text>
-              <View style={{marginTop: 10}}>
+            <Card.Content
+              style={{height: HEIGHT, width: WIDTH, alignItems: 'center'}}>
+              <View style={{flex: 1}}>
+                <View style={styles.Bigtimer}>
+                  <Text style={styles.BigCardTimer}>
+                    {format(new Date(elapsedTime), 'mm : ss : SS', {
+                      locale: ko,
+                    })}
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  marginTop: 10,
+                  flex: 5,
+                  backgroundColor: '#000',
+                  width: WIDTH,
+                }}>
                 <StopWatch
                   undongDetail={undongDetail}
                   setUndongDetail={setUndongDetail}
@@ -118,13 +141,39 @@ const Undong = ({item}: {item: UndongItemType}) => {
 };
 const styles = StyleSheet.create({
   itemView: {marginBottom: 10},
-  toggleOnCard: {
-    // height: 320,
+  toggleOnCard: {},
+
+  cardContainer: {
+    flex: 1,
     justifyContent: 'center',
   },
-  toggleOffCard: {justifyContent: 'center'},
-  cardContainer: {},
-  nameTextInput: {width: '60%', backgroundColor: 'white'},
+  active: {
+    justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+  },
+  timer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+  },
+  Bigtimer: {
+    flexDirection: 'row',
+    flex: 1,
+    width: WIDTH,
+    backgroundColor: '#000',
+    paddingHorizontal: '15%',
+  },
+  BigCardTimer: {
+    color: '#fff',
+    fontSize: 50,
+    fontWeight: '200',
+  },
+  CardTimer: {
+    color: 'white',
+  },
+  nameTextInput: {width: '60%', backgroundColor: '#000', color: '#fff'},
 });
 
 export default Undong;

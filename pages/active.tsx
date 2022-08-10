@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, FlatList, TouchableOpacity} from 'react-native';
+import {Animated, FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TabProps} from '../routes';
 import {Avatar, Card} from 'react-native-paper';
@@ -61,7 +61,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
     return <Undong item={item} />;
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Card style={styles.cardContainer}>
         <Card.Content style={{alignItems: 'center'}}>
           <Animated.Text
@@ -112,24 +112,25 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           ])
         }>
         <Avatar.Icon
-          color={'#5585E8'}
+          color={'#fff'}
           size={60}
           icon={'plus'}
-          style={{backgroundColor: 'white'}}
+          style={{backgroundColor: '#000'}}
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000',
   },
   plusbutton: {
     position: 'absolute',
-    top: '75%',
-    left: '80%',
+    top: '5%',
+    left: '85%',
   },
   neon: {
     // shadowOpacity: 0.8,
@@ -143,9 +144,11 @@ const styles = StyleSheet.create({
   cardContainer: {
     alignSelf: 'center',
     position: 'relative',
-    width: WIDTH * 0.95,
-    top: 2,
-    marginVertical: 10,
+    width: WIDTH,
+    backgroundColor: '#000FF',
+    top: 0,
+    opacity: 0.9,
+    marginVertical: 0,
   },
   cicletext: {
     width: '80%',
