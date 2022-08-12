@@ -106,20 +106,10 @@ const Undong = ({item}: {item: UndongItemType}) => {
           <Collapsible collapsed={toggle}>
             <Card.Content
               style={{height: HEIGHT, width: WIDTH, alignItems: 'center'}}>
-              <View style={{flex: 1}}>
-                <View style={styles.Bigtimer}>
-                  <Text style={styles.BigCardTimer}>
-                    {format(new Date(elapsedTime), 'mm : ss : SS', {
-                      locale: ko,
-                    })}
-                  </Text>
-                </View>
-              </View>
-
               <View
                 style={{
                   marginTop: 10,
-                  flex: 5,
+                  // flex: 5,
                   backgroundColor: '#000',
                   width: WIDTH,
                 }}>
@@ -158,20 +148,38 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  Bigtimer: {
-    flexDirection: 'row',
-    flex: 1,
-    width: WIDTH,
-    backgroundColor: '#000',
-    paddingHorizontal: '15%',
-  },
-  BigCardTimer: {
-    color: '#fff',
-    fontSize: 50,
-    fontWeight: '200',
-  },
+  // RestBigtimerView: {
+  //   flexDirection: 'row',
+  //   flex: 1,
+  //   width: 200,
+  //   backgroundColor: 'red',
+  //   paddingHorizontal: '15%',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // BigtimerView: {
+  //   flexDirection: 'row',
+  //   flex: 1,
+  //   // alignItems: 'center',
+  //   // justifyContent: 'center',
+  //   width: WIDTH,
+
+  //   backgroundColor: '#000',
+  //   paddingHorizontal: '15%',
+  // },
+  // RestTimer: {
+  //   textAlign: 'center',
+  //   color: '#fff',
+  // },
+  // BigCardTimer: {
+  //   color: '#fff',
+  //   fontSize: 50,
+  //   fontWeight: '200',
+  //   textAlign: 'center',
+  // },
   CardTimer: {
     color: 'white',
+    fontSize: 20,
   },
   nameTextInput: {width: '60%', backgroundColor: '#000', color: '#fff'},
 });

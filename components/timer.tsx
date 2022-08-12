@@ -1,9 +1,16 @@
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useState, useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {List} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import useInterval from '../hooks/useInterval';
 import {UndongItemType} from '../types/undong';
 
 interface timestamp {
@@ -24,6 +31,12 @@ type timerProps = {
   elapsedTime: number;
   setElapsedTime: React.Dispatch<React.SetStateAction<number>>;
 };
+
+type labTime = {
+  time: number;
+  restTime: number;
+}[];
+const WIDTH = Dimensions.get('window').width;
 const StopWatch: React.FC<timerProps> = ({
   undongDetail,
   setUndongDetail,
@@ -33,13 +46,24 @@ const StopWatch: React.FC<timerProps> = ({
   setElapsedTime,
 }) => {
   //   const [active, setActive] = useState(false);
-
+  const [defalutRestTime, setDefalutRestTime] = useState(180000);
+  const [timer, setTimer] = useState(defalutRestTime);
   const [startDate, setStartDate] = useState<any>(Date.now());
   const [pausedTime, setPausedTime] = useState(0);
-  const [lapTimes, setLapTimes] = useState([]);
+  const [lapTimes, setLapTimes] = useState<labTime>([]);
+  const [toggleTimer, setToggleTimer] = useState(false);
   const pausedTimeRef = useRef(pausedTime);
-  const activeRef = useRef(active);
   const startDateRef = useRef<any>(startDate);
+  const activeRef = useRef(active);
+  const startTimeRef = useRef(0);
+  const leftTimeRef = useRef(0);
+  useEffect(() => {
+    if (timer <= 0) {
+      setToggleTimer(false);
+      setTimer(180000);
+    }
+  }, [defalutRestTime, timer]);
+
   useEffect(() => {
     activeRef.current = active;
   }, [active]);
@@ -54,14 +78,19 @@ const StopWatch: React.FC<timerProps> = ({
     const Timer = requestAnimationFrame(tick.current);
     if (activeRef.current) {
       setElapsedTime(Date.now() - startDateRef.current + pausedTimeRef.current);
-      // setUndongDetail({...undongDetail, ActiveTime: Time});
       Timer;
-      if (!activeRef.current) {
-        cancelAnimationFrame(Timer);
-      }
     }
   });
 
+  useEffect(() => {
+    if (toggleTimer) {
+      startTimeRef.current = Date.now();
+      leftTimeRef.current = timer;
+      // setIsTimerRunning(true);
+    } else if (!toggleTimer || timer < 0) {
+      // setIsTimerRunning(false);
+    }
+  }, [timer, toggleTimer]);
   useEffect(() => {
     if (active) {
       requestAnimationFrame(tick.current);
@@ -74,22 +103,32 @@ const StopWatch: React.FC<timerProps> = ({
       setStartDate(Date.now());
     }
   }, [active, setActive]);
+
   const handleStopClick = useCallback(() => {
     if (active) {
       setActive(false);
       setPausedTime(elapsedTime);
-      // setUndongDetail({...undongDetail, ActiveTime: elapsedTime});
-      cancelAnimationFrame(requestAnimationFrame(tick.current));
+      setToggleTimer(false);
     }
   }, [active, elapsedTime, setActive]);
+
   const handleLapTimeClick = useCallback(() => {
     if (active) {
       const newLapTimes: any = Array.from(lapTimes);
-      newLapTimes.push(Date.now() - startDate + pausedTime);
+      const timerSets = Date.now() - startDate + pausedTime;
+      newLapTimes.push({time: timerSets, restTime: timer});
       setLapTimes(newLapTimes);
+      setToggleTimer(true);
       console.log(lapTimes);
     }
-  }, [active, lapTimes, pausedTime, startDate]);
+  }, [active, lapTimes, pausedTime, startDate, timer]);
+
+  useInterval(
+    () => {
+      timeDecrement();
+    },
+    toggleTimer ? 1000 : null
+  );
   const handleResetClick = useRef(() => {
     setActive(false);
     setStartDate(Date.now());
@@ -97,37 +136,107 @@ const StopWatch: React.FC<timerProps> = ({
     // setUndongDetail({...undongDetail, ActiveTime: 0});
     setPausedTime(0);
     setLapTimes([]);
+    setTimer(defalutRestTime);
   });
 
-  const getTimesFromMillis: any = (source: number) => {
-    const timeUnits = [
-      ['millis', 1000],
-      ['seconds', 60],
-      ['minutes', 60],
-      ['hours', 24],
-      ['days', 7],
-      ['weeks', 52],
-      ['years'],
-    ];
-
-    return timeUnits.reduce((acc, [unitKey, unitValue]: any) => {
-      if (unitValue) {
-        const value = source % unitValue;
-        source = (source - value) / unitValue;
-        return Object.assign({}, acc, {[unitKey]: value});
-      }
-      return Object.assign({}, acc, {[unitKey]: source});
-    }, {});
+  const timeDecrement = () => {
+    const timePassed = Date.now() - startTimeRef.current;
+    setTimer(leftTimeRef.current - timePassed);
+  };
+  const addTime = (time: number) => {
+    setDefalutRestTime(prev => prev + time);
+    setTimer(prev => prev + time);
+    leftTimeRef.current += time;
   };
 
   return (
     <View style={[]}>
+      <View style={styles.timer__area}>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'mm', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'mm', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+        <View style={styles.timer__symbol}>
+          <Text style={styles.timer__symbol__text}>:</Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'ss', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'ss', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+      </View>
+      {/* 쉬는시간 타이머 */}
+      <View style={styles.resttimer__area}>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__rest__text}>
+            {format(timer, 'mm', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__rest__text}>
+            {format(timer, 'mm', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+        <View style={styles.timer__symbol}>
+          <Text style={styles.timer__restsymbol__text}>:</Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__rest__text}>
+            {format(timer, 'ss', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__rest__text}>
+            {format(timer, 'ss', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+        <View style={styles.addtimerContainer}>
+          <TouchableOpacity
+            onPress={() => addTime(30000)}
+            style={styles.addtimerView}>
+            <Text style={styles.addtimerText}>+30</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => addTime(-30000)}>
+            <Text style={styles.addtimerText}>-30</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.tabbarContainer}>
         <TouchableOpacity
           onPress={active ? handleLapTimeClick : handleResetClick.current}
+          disabled={toggleTimer}
           style={styles.icontabs}>
           {active ? (
-            <Text style={styles.TextFont}>Lab</Text>
+            <Text style={styles.TextFont}>
+              {toggleTimer ? '쉬는시간 중...' : lapTimes.length + 1 + '세트 끝'}
+            </Text>
           ) : (
             <Text style={styles.TextFont}>재설정</Text>
           )}
@@ -151,17 +260,33 @@ const StopWatch: React.FC<timerProps> = ({
           {lapTimes.map((item, index) => {
             return (
               <List.Item
-                key={item}
-                title={format(new Date(item), 'mm : ss ', {
+                key={item.time}
+                title={format(new Date(item.time), 'mm : ss ', {
                   locale: ko,
                 })}
                 right={() => (
-                  <Text style={{color: '#fff', marginRight: '15%'}}>
-                    {index}세트
-                  </Text>
+                  <View>
+                    <Text style={{color: '#fff', marginRight: '15%'}}>
+                      {index + 1}세트
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'red',
+                        marginRight: '15%',
+                        paddingTop: 5,
+                        fontSize: 15,
+                      }}>
+                      쉬는시간 : {format(item.restTime, 'mm : ss')}
+                    </Text>
+                  </View>
                 )}
                 titleStyle={{color: '#fff'}}
                 left={() => <List.Icon icon="folder" color="#fff" />}
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#fff',
+                  width: WIDTH * 0.9,
+                }}
               />
             );
           })}
@@ -175,18 +300,104 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   timeStamp: {
-    // width: 120,
     flexDirection: 'row',
-    // height: 320,
   },
   tabbarContainer: {
     flexDirection: 'row',
     borderBottomColor: '#a3a3a3',
     borderWidth: 1,
     height: 60,
-    // width: '100%',
   },
   TextFont: {color: '#fff'},
   icontabs: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  RestBigtimerView: {
+    flexDirection: 'row',
+    width: 200,
+    backgroundColor: 'red',
+    paddingHorizontal: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  BigtimerView: {
+    flexDirection: 'row',
+    width: WIDTH,
+
+    backgroundColor: '#000',
+  },
+  RestTimer: {
+    textAlign: 'center',
+    color: '#fff',
+  },
+  BigCardTimer: {
+    color: '#fff',
+    fontSize: 50,
+    fontWeight: '200',
+    textAlign: 'center',
+  },
+  timer__area: {
+    paddingRight: '5%',
+    justifyContent: 'center',
+    width: WIDTH,
+    backgroundColor: '#000',
+    flexDirection: 'row',
+  },
+  timer__time__area: {
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  timer__symbol: {marginHorizontal: 10},
+  timer__time__text: {
+    fontSize: 70,
+    width: 45,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: '200',
+  },
+  timer__symbol__text: {
+    fontSize: 60,
+    width: 10,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: '200',
+  },
+  resttimer__area: {
+    paddingRight: '5%',
+    justifyContent: 'center',
+    width: WIDTH,
+    left: 30,
+    backgroundColor: '#000',
+    flexDirection: 'row',
+  },
+  timer__rest__text: {
+    fontSize: 50,
+    width: 30,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: '200',
+  },
+  timer__restsymbol__text: {
+    fontSize: 40,
+    width: 10,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: '200',
+  },
+  addtimerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // alignSelf: 'flex-end',
+    left: 10,
+  },
+  addtimerView: {
+    backgroundColor: 'green',
+    borderRadius: 10,
+    width: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addtimerText: {
+    color: '#fff',
+    fontSize: 18,
+  },
 });
 export default StopWatch;

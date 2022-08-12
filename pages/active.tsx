@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  Animated,
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TabProps} from '../routes';
 import {Avatar, Card} from 'react-native-paper';
@@ -24,6 +30,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
     format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
   );
   const [undongData, setUndongData] = useState<UndongType>([]);
+  const [clockToggle, setClockToggle] = useState<boolean>(true);
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
@@ -62,40 +69,46 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Card style={styles.cardContainer}>
-        <Card.Content style={{alignItems: 'center'}}>
-          <Animated.Text
-            style={[
-              styles.neon,
-              {
-                shadowOpacity: neonAnimate,
-                shadowColor: 'cyan',
-                color: 'cyan',
-                fontSize: 20,
-              },
-            ]}>
-            {currentTime.split(' ')[0].split('.')[0]}년{' '}
-            {currentTime.split(' ')[0].split('.')[1]}월{' '}
-            {currentTime.split(' ')[0].split('.')[2]}일
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.neon,
-              {
-                shadowOpacity: neonAnimate,
-                shadowColor: 'cyan',
-                color: 'cyan',
-                fontSize: 25,
-                lineHeight: 35,
-              },
-            ]}>
-            {currentTime.split(' ')[1].split(':')[0]}시{' '}
-            {currentTime.split(' ')[1].split(':')[1]}분{' '}
-            {currentTime.split(' ')[1].split(':')[2]}초
-          </Animated.Text>
-        </Card.Content>
-      </Card>
-      <FlatList data={undongData} renderItem={renderUndong} />
+      {clockToggle ? (
+        <Card style={styles.cardContainer}>
+          <Card.Content style={{alignItems: 'center'}}>
+            <Animated.Text
+              style={[
+                styles.neon,
+                {
+                  shadowOpacity: neonAnimate,
+                  shadowColor: 'cyan',
+                  color: 'cyan',
+                  fontSize: 20,
+                },
+              ]}>
+              {currentTime.split(' ')[0].split('.')[0]}년{' '}
+              {currentTime.split(' ')[0].split('.')[1]}월{' '}
+              {currentTime.split(' ')[0].split('.')[2]}일
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.neon,
+                {
+                  shadowOpacity: neonAnimate,
+                  shadowColor: 'cyan',
+                  color: 'cyan',
+                  fontSize: 25,
+                  lineHeight: 35,
+                },
+              ]}>
+              {currentTime.split(' ')[1].split(':')[0]}시{' '}
+              {currentTime.split(' ')[1].split(':')[1]}분{' '}
+              {currentTime.split(' ')[1].split(':')[2]}초
+            </Animated.Text>
+          </Card.Content>
+        </Card>
+      ) : null}
+      <FlatList
+        data={undongData}
+        renderItem={renderUndong}
+        style={{marginTop: 30}}
+      />
       <TouchableOpacity
         style={styles.plusbutton}
         onPress={() =>
@@ -118,6 +131,19 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           style={{backgroundColor: '#000'}}
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.toggleCurrentTime}
+        onPress={() => setClockToggle(prev => !prev)}>
+        <Avatar.Icon
+          color={'#fff'}
+          size={60}
+          icon={'clock'}
+          style={{backgroundColor: '#000'}}
+        />
+      </TouchableOpacity>
+      <Text style={styles.toggleCurrentTimeOnoff}>
+        {clockToggle ? 'ON' : 'OFF'}
+      </Text>
     </SafeAreaView>
   );
 };
@@ -132,6 +158,19 @@ const styles = StyleSheet.create({
     top: '5%',
     left: '85%',
   },
+  toggleCurrentTime: {
+    position: 'absolute',
+    top: '5%',
+    right: '85%',
+  },
+  toggleCurrentTimeOnoff: {
+    position: 'absolute',
+    top: '7%',
+    right: '83%',
+    color: 'red',
+    fontSize: 14,
+    fontWeight: '500',
+  },
   neon: {
     // shadowOpacity: 0.8,
     shadowRadius: 16,
@@ -145,6 +184,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'relative',
     width: WIDTH,
+    height: 60,
     backgroundColor: '#000FF',
     top: 0,
     opacity: 0.9,
