@@ -1,20 +1,48 @@
+/* eslint-disable react-native/no-inline-styles */
 import {addDays, format, getDate, startOfWeek} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {
-  Agenda,
-  AgendaEntry,
-  AgendaSchedule,
-  DateData,
-  LocaleConfig,
-} from 'react-native-calendars';
+import {Agenda, LocaleConfig} from 'react-native-calendars';
 import {Avatar, Card} from 'react-native-paper';
+import {Undongitems} from '../slices/exercise';
 import {LOCALEKR} from '../src/data/calenderLocale';
-
+import * as Animatable from 'react-native-animatable';
+import Timeline from 'react-native-timeline-flatlist';
+import {labTime} from './timer';
+import {HEIGHT, WIDTH} from '../pages/home';
+const DATA = [
+  {
+    time: '09:00',
+    title: 'Archery Training',
+    description: 'The B',
+    lineColor: '#009688',
+  },
+  {
+    time: '10:45',
+    title: 'Play Badminton',
+    description: 'Badmi.',
+  },
+  {
+    time: '12:00',
+    title: 'Lunch',
+  },
+  {
+    time: '14:00',
+    title: 'Watch Soccer',
+    description: 'Team sport  ',
+    lineColor: '#009688',
+  },
+  {
+    time: '16:30',
+    title: 'Go to Fitness center',
+    description: 'Look out :)',
+  },
+];
 type Props = {
   date: Date;
   onChange: (value: Date) => void;
+  exercise: Undongitems[];
 };
 export type WeekDay = {
   formatted: string;
@@ -42,53 +70,123 @@ export const getWeekDays = (date: Date): WeekDay[] => {
 
 LocaleConfig.locales.fr = LOCALEKR;
 LocaleConfig.defaultLocale = 'fr';
-const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
-  const [items, setItems] = useState<AgendaSchedule>({});
-  const loadItems = (day: DateData) => {
-    setTimeout(() => {
-      for (let i = -15; i < 0; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = timeToString(time);
+const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
+  // const [data, setdata] = useState({
+  //   '2022-08-15': [{name: '1'}],
+  //   '2022-08-16': [{name: '2'}],
+  // });
 
-        if (!items[strTime]) {
-          items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
-              day: strTime,
-            });
-          }
-        }
+  // const [items, setItems] = useState<any>({});
+  const groupBy = (object: any[], property: string) => {
+    return object.reduce((acc, obj) => {
+      var key = format(obj[property], 'yyyy-MM-dd');
+      if (!acc[key]) {
+        acc[key] = [];
       }
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      setItems(newItems);
-    }, 1000);
+      acc[key].push(obj);
+      return acc;
+    }, {});
   };
 
-  const timeToString = (time: number) => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  };
+  // const loadItems = (day: DateData) => {
+  //   setTimeout(() => {
+  //     for (let i = -15; i < 15; i++) {
+  //       const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+  //       const strTime = timeToString(time);
 
-  const renderItem = (item: AgendaEntry) => {
+  //       if (!items[strTime]) {
+  //         items[strTime] = [];
+  //         const numItems = Math.floor(Math.random() * 3 + 1);
+  //         for (let j = 0; j < numItems; j++) {
+  //           items[strTime].push({
+  //             name: 'Item for ' + strTime + ' #' + j,
+  //             height: Math.max(50, Math.floor(Math.random() * 150)),
+  //             day: strTime,
+  //           });
+  //         }
+  //       }
+  //     }
+  //     const newItems: AgendaSchedule = {};
+  //     Object.keys(items).forEach(key => {
+  //       newItems[key] = items[key];
+  //     });
+  //     setItems(newItems);
+  //   }, 1000);
+  // };
+  const TimeLinerenderItem: React.FC = (rowData: any) => {
     return (
-      <TouchableOpacity style={{marginRight: 10, marginTop: 17}}>
-        <Card>
+      <View style={{width: 150, height: HEIGHT}}>
+        <Text style={[styles.title]}>{rowData.title}</Text>
+        <View style={styles.descriptionContainer}>
+          <Text style={[styles.textDescription]}>{rowData.description}</Text>
+        </View>
+        {/* <Text>aasdfasdfasdf</Text> */}
+      </View>
+    );
+  };
+  const AgendaItem: React.FC<{
+    item: Undongitems;
+    onPress?: () => void;
+    isFirst?: boolean;
+  }> = ({item}) => {
+    const [toggle, setToggle] = useState<boolean>(false);
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => setToggle(prev => !prev)}
+        style={{marginRight: 10, marginTop: 17}}>
+        <Card style={{backgroundColor: '#9c9999'}}>
           <Card.Content>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <Text>{item.name}</Text>
-              <Avatar.Text label="Hi" />
-            </View>
+            <Animatable.View
+              style={[
+                {
+                  height: 40,
+                },
+                toggle && {
+                  flex: 1,
+                  height: 600,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}
+              transition={['height']}>
+              {/* <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // alignItems: 'center',
+                }}>
+                <Text>{item?.undongDetail.name}</Text>
+                <Text>{format(item.undongDetail.startdate, 'HH:mm:ss')}</Text>
+              </View> */}
+
+              {/* {toggle ? ( */}
+
+              <Timeline
+                style={styles.list}
+                circleSize={22}
+                circleColor="rgba(0,0,0,0)"
+                lineColor="rgb(45,156,219)"
+                titleStyle={{
+                  textAlign: 'center',
+                }}
+                columnFormat={'single-column-left'}
+                timeContainerStyle={{minWidth: 52}}
+                timeStyle={{
+                  textAlign: 'center',
+                  backgroundColor: '#ff9797',
+                  color: 'white',
+                  // padding: 5,
+                  width: 52,
+                  height: 30,
+                  borderRadius: 13,
+                }}
+                descriptionStyle={{color: '#000'}}
+                data={DATA}
+                renderDetail={TimeLinerenderItem}
+              />
+              {/* ) : null} */}
+            </Animatable.View>
           </Card.Content>
         </Card>
       </TouchableOpacity>
@@ -97,34 +195,22 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
   return (
     <>
       <Agenda
-        items={items}
-        // // Callback that fires when the calendar is opened or closed
-        // // onCalendarToggled={calendarOpened => {
-        // //   console.log(calendarOpened);
-        // // }}
-        // // Callback that gets called on day press
-        // onDayPress={day => {
-        //   console.log('day pressed');
-        // }}
-        // // Callback that gets called when day changes while scrolling agenda list
-        // onDayChange={day => {
-        //   console.log('day changed');
-        // }}
-        // // Initially selected day
-        // selected={'2022-05-16'}
-        // // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        // minDate={'2020-05-10'}
-        // // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-        // maxDate={'2025-05-30'}
-        // // Max amount of months allowed to scroll to the past. Default = 50
-        // pastScrollRange={50}
-        // // Max amount of months allowed to scroll to the future. Default = 50
-        // futureScrollRange={50}
-        // // Specify how each item should be rendered in agenda
+        items={groupBy(exercise, 'id')}
+        renderItem={(item, isFirst) => (
+          <AgendaItem
+            isFirst={isFirst}
+            item={item as unknown as Undongitems}
+            // onPress={
+            //   onPressItem
+            //     ? () => onPressItem(item as unknown as CustomAgendaItem)
+            //     : undefined
+            // }
+          />
+        )}
         pastScrollRange={10}
-        loadItemsForMonth={loadItems}
-        renderItem={renderItem}
+        // loadItemsForMonth={loadItems}
         showOnlySelectedDayItems
+        // renderItem={renderItem}
         // firstDay={4}
         // renderDay={(day, item) => {
         //   return <View />;
@@ -138,9 +224,28 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
         //   return <View />;
         // }}
         // // Specify what should be rendered instead of ActivityIndicator
-        // renderEmptyData={() => {
-        //   return <View />;
-        // }}
+        // endFillColor={'#000'}
+        renderEmptyData={() => {
+          return (
+            <TouchableOpacity style={{marginTop: 17}}>
+              <Card style={{backgroundColor: '#9c9999'}}>
+                <Card.Content>
+                  <Animatable.View
+                    style={[
+                      {
+                        // flexDirection: 'row',
+                        // justifyContent: 'space-between',
+                        // alignItems: 'center',
+                        height: 40,
+                      },
+                    ]}>
+                    <Text>운동을 하지 않은 날입니다.</Text>
+                  </Animatable.View>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+          );
+        }}
         // // Specify your item comparison function for increased performance
         // // rowHasChanged={(r1, r2) => {
         // //   return r1.text !== r2.text;
@@ -164,13 +269,18 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
         // // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView
         // refreshControl={null}
         // // Agenda theme
-        // theme={{
-        //   // ...calendarTheme,
-        //   agendaDayTextColor: 'yellow',
-        //   agendaDayNumColor: 'green',
-        //   agendaTodayColor: 'red',
-        //   agendaKnobColor: 'blue',
-        // }}
+        theme={{
+          // ...calendarTheme,
+          agendaDayTextColor: 'yellow',
+          agendaDayNumColor: 'green',
+          agendaTodayColor: 'red',
+          agendaKnobColor: '#5585E8',
+          backgroundColor: '#000',
+          calendarBackground: 'gray',
+          dayTextColor: '#fff',
+          textColor: '#fff',
+          monthTextColor: '#fff',
+        }}
         // Agenda container style
       />
     </>
@@ -179,9 +289,10 @@ const WeekCalendar: React.FC<Props> = ({date, onChange}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
+    flex: 1,
+    padding: 20,
+    paddingTop: 65,
+    backgroundColor: 'white',
   },
   ToDayText: {
     color: '#5585E8',
@@ -214,6 +325,27 @@ const styles = StyleSheet.create({
   weekDayItem: {
     alignItems: 'center',
     padding: 20,
+  },
+  list: {
+    flex: 1,
+    // marginTop: 20,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+    paddingRight: 50,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  textDescription: {
+    marginLeft: 10,
+    color: 'gray',
   },
 });
 

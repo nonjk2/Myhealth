@@ -11,6 +11,8 @@ import {
 import {List} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import useInterval from '../hooks/useInterval';
+import exerciseSlice from '../slices/exercise';
+import {useAppDispatch} from '../store';
 import {UndongItemType} from '../types/undong';
 
 interface timestamp {
@@ -32,35 +34,37 @@ type timerProps = {
   setElapsedTime: React.Dispatch<React.SetStateAction<number>>;
 };
 
-type labTime = {
+export type labTime = {
   time: number;
   restTime: number;
+  activeTime: number;
 }[];
 const WIDTH = Dimensions.get('window').width;
 const StopWatch: React.FC<timerProps> = ({
   undongDetail,
-  setUndongDetail,
   active,
   setActive,
   elapsedTime,
   setElapsedTime,
 }) => {
   //   const [active, setActive] = useState(false);
-  const [defalutRestTime, setDefalutRestTime] = useState(180000);
+  const [defalutRestTime, setDefalutRestTime] = useState(3000);
   const [timer, setTimer] = useState(defalutRestTime);
   const [startDate, setStartDate] = useState<any>(Date.now());
   const [pausedTime, setPausedTime] = useState(0);
-  const [lapTimes, setLapTimes] = useState<labTime>([]);
+  const [lapTimes, setLapTimes] = useState<labTime>(undongDetail.sets || []);
   const [toggleTimer, setToggleTimer] = useState(false);
   const pausedTimeRef = useRef(pausedTime);
   const startDateRef = useRef<any>(startDate);
   const activeRef = useRef(active);
   const startTimeRef = useRef(0);
   const leftTimeRef = useRef(0);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (timer <= 0) {
       setToggleTimer(false);
-      setTimer(180000);
+      setTimer(3000);
     }
   }, [defalutRestTime, timer]);
 
@@ -116,10 +120,19 @@ const StopWatch: React.FC<timerProps> = ({
     if (active) {
       const newLapTimes: any = Array.from(lapTimes);
       const timerSets = Date.now() - startDate + pausedTime;
-      newLapTimes.push({time: timerSets, restTime: timer});
+      const activeTime =
+        lapTimes.length === 0
+          ? timerSets
+          : timerSets -
+            lapTimes[lapTimes.length - 1].time -
+            lapTimes[lapTimes.length - 1].restTime;
+      newLapTimes.push({
+        time: timerSets,
+        restTime: timer,
+        activeTime: activeTime,
+      });
       setLapTimes(newLapTimes);
       setToggleTimer(true);
-      console.log(lapTimes);
     }
   }, [active, lapTimes, pausedTime, startDate, timer]);
 
@@ -133,7 +146,6 @@ const StopWatch: React.FC<timerProps> = ({
     setActive(false);
     setStartDate(Date.now());
     setElapsedTime(0);
-    // setUndongDetail({...undongDetail, ActiveTime: 0});
     setPausedTime(0);
     setLapTimes([]);
     setTimer(defalutRestTime);
@@ -147,6 +159,19 @@ const StopWatch: React.FC<timerProps> = ({
     setDefalutRestTime(prev => prev + time);
     setTimer(prev => prev + time);
     leftTimeRef.current += time;
+  };
+  const successAct = () => {
+    setActive(false);
+    dispatch(
+      exerciseSlice.actions.addUndong(true, undongDetail.id, {
+        id: undongDetail.id,
+        startdate: undongDetail.startdate,
+        ActiveTime: elapsedTime,
+        enddate: Date.now(),
+        name: undongDetail.name,
+        sets: lapTimes,
+      })
+    );
   };
 
   return (
@@ -250,6 +275,9 @@ const StopWatch: React.FC<timerProps> = ({
             name={active ? 'pause' : 'play-circle'}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={successAct} style={styles.icontabs}>
+          <Text style={styles.TextFont}>저장</Text>
+        </TouchableOpacity>
       </View>
       <View>
         <List.Section>
@@ -266,27 +294,18 @@ const StopWatch: React.FC<timerProps> = ({
                 })}
                 right={() => (
                   <View>
-                    <Text style={{color: '#fff', marginRight: '15%'}}>
-                      {index + 1}세트
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'red',
-                        marginRight: '15%',
-                        paddingTop: 5,
-                        fontSize: 15,
-                      }}>
+                    <Text style={styles.labtimeIndex}>{index + 1}세트</Text>
+                    <Text style={styles.restText}>
                       쉬는시간 : {format(item.restTime, 'mm : ss')}
+                    </Text>
+                    <Text style={styles.labtimeIndex}>
+                      운동시간 : {format(item.activeTime, 'mm : ss')}
                     </Text>
                   </View>
                 )}
                 titleStyle={{color: '#fff'}}
                 left={() => <List.Icon icon="folder" color="#fff" />}
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#fff',
-                  width: WIDTH * 0.9,
-                }}
+                style={styles.labtimeContainer}
               />
             );
           })}
@@ -372,7 +391,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     width: 30,
     textAlign: 'center',
-    color: '#fff',
+    color: 'red',
     fontWeight: '200',
   },
   timer__restsymbol__text: {
@@ -398,6 +417,18 @@ const styles = StyleSheet.create({
   addtimerText: {
     color: '#fff',
     fontSize: 18,
+  },
+  restText: {
+    color: 'red',
+    marginRight: '15%',
+    paddingTop: 5,
+    fontSize: 15,
+  },
+  labtimeIndex: {color: '#fff', marginRight: '15%'},
+  labtimeContainer: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    width: WIDTH * 0.9,
   },
 });
 export default StopWatch;

@@ -1,15 +1,23 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {Button, Card, TextInput} from 'react-native-paper';
-import {UndongItemType} from '../types/undong';
+import {UndongItemType, UndongType} from '../types/undong';
 import StopWatch from './timer';
 import Collapsible from 'react-native-collapsible';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import {useAppSelector} from '../store';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
-const Undong = ({item}: {item: UndongItemType}) => {
-  const [elapsedTime, setElapsedTime] = useState(0);
+
+type undongProp = {
+  item: UndongItemType;
+  undongData: UndongType;
+  setUndongData: React.Dispatch<React.SetStateAction<UndongType>>;
+};
+const Undong: React.FC<undongProp> = ({item, setUndongData, undongData}) => {
+  const [elapsedTime, setElapsedTime] = useState(item.ActiveTime || 0);
   const [active, setActive] = useState(false);
   const [toggle, setToggle] = useState<boolean>(true);
   const [undongDetail, setUndongDetail] = useState(item);
@@ -19,34 +27,14 @@ const Undong = ({item}: {item: UndongItemType}) => {
     },
     [undongDetail]
   );
-  const MemoStopWatch = React.memo(StopWatch);
   const EraseText = useCallback(() => {
     setUndongDetail({...undongDetail, name: ''});
   }, [undongDetail]);
-
-  const getTimesFromMillis: any = (source: number) => {
-    const timeUnits = [
-      ['millis', 1000],
-      ['seconds', 60],
-      ['minutes', 60],
-      ['hours', 24],
-      ['days', 7],
-      ['weeks', 52],
-      ['years'],
-    ];
-
-    return timeUnits.reduce((acc, [unitKey, unitValue]: any) => {
-      if (unitValue) {
-        const value = source % unitValue;
-        source = (source - value) / unitValue;
-        return Object.assign({}, acc, {[unitKey]: value});
-      }
-      return Object.assign({}, acc, {[unitKey]: source});
-    }, {});
-  };
-
+  const myexercise = useAppSelector(state =>
+    state.exercise.find(e => e.id === item.id)
+  );
   return (
-    <View key={item.startdate} style={styles.itemView}>
+    <View style={styles.itemView}>
       <Card style={[active && styles.toggleOnCard]}>
         <Card.Content style={{backgroundColor: '#000'}}>
           <View style={{flexDirection: 'row'}}>
@@ -94,9 +82,22 @@ const Undong = ({item}: {item: UndongItemType}) => {
               </View>
               <View style={styles.active}>
                 <Text style={styles.CardTimer}>
-                  {active ? '운동중' : '대기중'}
+                  {myexercise?.complete ? '운동완료' : '대기중'}
                 </Text>
               </View>
+            </View>
+            <View>
+              <IonIcon
+                name={'close'}
+                color={'#fff'}
+                size={40}
+                onPress={() => {
+                  const FilterData = undongData.filter(
+                    val => val.id !== item.id
+                  );
+                  setUndongData(FilterData);
+                }}
+              />
             </View>
           </View>
           <Button onPress={() => setToggle(prev => !prev)}>
@@ -106,13 +107,7 @@ const Undong = ({item}: {item: UndongItemType}) => {
           <Collapsible collapsed={toggle}>
             <Card.Content
               style={{height: HEIGHT, width: WIDTH, alignItems: 'center'}}>
-              <View
-                style={{
-                  marginTop: 10,
-                  // flex: 5,
-                  backgroundColor: '#000',
-                  width: WIDTH,
-                }}>
+              <View style={styles.cardContainerView}>
                 <StopWatch
                   undongDetail={undongDetail}
                   setUndongDetail={setUndongDetail}
@@ -137,6 +132,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  cardContainerView: {
+    backgroundColor: '#000',
+    width: WIDTH,
+  },
   active: {
     justifyContent: 'center',
     flex: 1,
@@ -148,35 +147,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  // RestBigtimerView: {
-  //   flexDirection: 'row',
-  //   flex: 1,
-  //   width: 200,
-  //   backgroundColor: 'red',
-  //   paddingHorizontal: '15%',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-  // BigtimerView: {
-  //   flexDirection: 'row',
-  //   flex: 1,
-  //   // alignItems: 'center',
-  //   // justifyContent: 'center',
-  //   width: WIDTH,
-
-  //   backgroundColor: '#000',
-  //   paddingHorizontal: '15%',
-  // },
-  // RestTimer: {
-  //   textAlign: 'center',
-  //   color: '#fff',
-  // },
-  // BigCardTimer: {
-  //   color: '#fff',
-  //   fontSize: 50,
-  //   fontWeight: '200',
-  //   textAlign: 'center',
-  // },
   CardTimer: {
     color: 'white',
     fontSize: 20,

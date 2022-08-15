@@ -1,17 +1,21 @@
+import {labTime} from '../components/timer';
+
 export type UndongType = {
-  startdate: string;
+  id: number | 0;
+  startdate: number;
   name?: string | undefined;
-  reps?: number | undefined;
-  sets?: number | undefined;
-  enddate?: string | undefined;
+  reps?: [] | undefined;
+  sets?: [] | labTime;
+  enddate?: number | undefined;
   ActiveTime?: number | undefined;
 }[];
 
 export type UndongItemType = {
-  startdate: string;
+  id: number | 0;
+  startdate: number;
   name?: string | undefined;
-  reps?: number | undefined;
-  sets?: number | undefined;
-  enddate?: string | undefined;
+  reps?: [] | undefined;
+  sets?: [] | labTime;
+  enddate?: number | undefined;
   ActiveTime?: number | undefined;
 };

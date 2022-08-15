@@ -1,35 +1,31 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {UndongItemType} from '../types/undong';
 
-export interface items {
+export interface Undongitems {
   complete: boolean;
-  date: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+  id: number;
+  undongDetail: UndongItemType;
+  user?: [];
 }
-
-const initialState = {
-  complete: false,
-  date: 'Sat Jul 08 2022 22:59:13 GMT+0900 (대한민국 표준시)',
-  firstName: 'Kwon1',
-  lastName: 'YoungJae1',
-  email: 'kyoje11@gmail1.com',
-} as items;
 
 const exerciseSlice = createSlice({
   name: 'exercise',
-  initialState,
+  initialState: [] as Undongitems[],
   reducers: {
-    setExercise(state, action) {
-      state.complete = action.payload.complete;
-      state.date = action.payload.date;
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
-      state.email = action.payload.email;
+    addUndong: {
+      reducer: (state, action: PayloadAction<Undongitems>) => {
+        if (!state.map(v => v.id).includes(action.payload.id)) {
+          state.push(action.payload);
+        } else {
+          console.log('asdf');
+        }
+      },
+      prepare: (complete, id, undongDetail: UndongItemType) => {
+        return {payload: {complete, id, undongDetail}};
+      },
     },
   },
-  //   extraReducers: builder => {},
 });
 
 export default exerciseSlice;

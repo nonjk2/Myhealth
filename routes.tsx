@@ -88,6 +88,7 @@ const TabNav = (): React.ReactElement => {
         component={HomePage}
         options={{
           tabBarButton: props => <TabButton {...props} item={items[0]} />,
+          headerShown: false,
         }}
       />
       <Tab.Screen

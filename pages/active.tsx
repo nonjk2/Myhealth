@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   FlatList,
@@ -14,9 +14,11 @@ import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import Undong from '../components/undong';
 import {UndongItemType, UndongType} from '../types/undong';
+import {useSelector} from 'react-redux';
+import {Undongitems} from '../slices/exercise';
+import {useAppSelector} from '../store';
 
 const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
 
 interface Props {
   type: number;
@@ -29,7 +31,10 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
   const [currentTime, setCurrentTime] = useState<string>(
     format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
   );
-  const [undongData, setUndongData] = useState<UndongType>([]);
+  const undongDataPatch = useAppSelector(state => state.exercise);
+  const [undongData, setUndongData] = useState<UndongType>(
+    undongDataPatch.map(e => e.undongDetail)
+  );
   const [clockToggle, setClockToggle] = useState<boolean>(true);
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   useEffect(() => {
@@ -64,9 +69,18 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
     return () => clearInterval(timer);
   }, []);
 
-  const renderUndong = ({item}: {item: UndongItemType}) => {
-    return <Undong item={item} />;
-  };
+  const renderUndong = useCallback(
+    ({item}: {item: UndongItemType}) => {
+      return (
+        <Undong
+          item={item}
+          setUndongData={setUndongData}
+          undongData={undongData}
+        />
+      );
+    },
+    [undongData]
+  );
   return (
     <SafeAreaView style={styles.container}>
       {clockToggle ? (
@@ -108,6 +122,8 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
         data={undongData}
         renderItem={renderUndong}
         style={{marginTop: 30}}
+        keyExtractor={item => item.id}
+        extraData={undongData}
       />
       <TouchableOpacity
         style={styles.plusbutton}
@@ -115,11 +131,12 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           setUndongData([
             ...undongData,
             {
-              startdate: currentTime,
+              id: Date.now(),
+              startdate: Date.now(),
               name: '',
-              reps: 0,
-              sets: 0,
-              enddate: '',
+              reps: [],
+              sets: [],
+              enddate: 0,
               ActiveTime: 0,
             },
           ])
