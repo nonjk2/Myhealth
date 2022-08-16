@@ -6,8 +6,8 @@ export type UndongType = {
   name?: string | undefined;
   reps?: [] | undefined;
   sets?: [] | labTime;
-  enddate?: number | undefined;
-  ActiveTime?: number | undefined;
+  enddate: number;
+  ActiveTime: number | undefined;
 }[];
 
 export type UndongItemType = {
@@ -16,6 +16,6 @@ export type UndongItemType = {
   name?: string | undefined;
   reps?: [] | undefined;
   sets?: [] | labTime;
-  enddate?: number | undefined;
-  ActiveTime?: number | undefined;
+  enddate: number;
+  ActiveTime: number | undefined;
 };

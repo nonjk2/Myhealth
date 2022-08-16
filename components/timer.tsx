@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   tabbarContainer: {
     flexDirection: 'row',
     borderBottomColor: '#a3a3a3',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     height: 60,
   },
   TextFont: {color: '#fff'},
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: WIDTH,
 
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
   },
   RestTimer: {
     textAlign: 'center',
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
     justifyContent: 'center',
     width: WIDTH,
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
     flexDirection: 'row',
   },
   timer__time__area: {
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: WIDTH,
     left: 30,
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
     flexDirection: 'row',
   },
   timer__rest__text: {
@@ -426,7 +426,6 @@ const styles = StyleSheet.create({
   },
   labtimeIndex: {color: '#fff', marginRight: '15%'},
   labtimeContainer: {
-    borderWidth: 1,
     borderColor: '#fff',
     width: WIDTH * 0.9,
   },

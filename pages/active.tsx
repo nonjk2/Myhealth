@@ -145,7 +145,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           color={'#fff'}
           size={60}
           icon={'plus'}
-          style={{backgroundColor: '#000'}}
+          style={{backgroundColor: '#202020'}}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -155,7 +155,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           color={'#fff'}
           size={60}
           icon={'clock'}
-          style={{backgroundColor: '#000'}}
+          style={{backgroundColor: '#202020'}}
         />
       </TouchableOpacity>
       <Text style={styles.toggleCurrentTimeOnoff}>
@@ -168,7 +168,7 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
   },
   plusbutton: {
     position: 'absolute',
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: WIDTH,
     height: 60,
-    backgroundColor: '#000FF',
+    backgroundColor: '#202020',
     top: 0,
     opacity: 0.9,
     marginVertical: 0,

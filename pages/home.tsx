@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     height: HEIGHT,
     // margin: 10,
     // paddingTop: 10,
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
   },
   greeting: {
     fontSize: 20,

@@ -1,5 +1,4 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import axios from 'axios';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {UndongItemType} from '../types/undong';
 
 export interface Undongitems {

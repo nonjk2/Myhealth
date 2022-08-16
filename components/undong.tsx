@@ -36,7 +36,7 @@ const Undong: React.FC<undongProp> = ({item, setUndongData, undongData}) => {
   return (
     <View style={styles.itemView}>
       <Card style={[active && styles.toggleOnCard]}>
-        <Card.Content style={{backgroundColor: '#000'}}>
+        <Card.Content style={{backgroundColor: '#202020'}}>
           <View style={{flexDirection: 'row'}}>
             <TextInput
               // placeholder="운동이름을 써넣어주세요"
@@ -51,7 +51,7 @@ const Undong: React.FC<undongProp> = ({item, setUndongData, undongData}) => {
                   text: 'white',
                   primary: 'white',
                   // underlineColor: 'transparent',
-                  background: '#000',
+                  background: '#202020',
                 },
               }}
               underlineColor={'#fff'}
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardContainerView: {
-    backgroundColor: '#000',
+    backgroundColor: '#202020',
     width: WIDTH,
   },
   active: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
   },
-  nameTextInput: {width: '60%', backgroundColor: '#000', color: '#fff'},
+  nameTextInput: {width: '60%', backgroundColor: '#202020', color: '#fff'},
 });
 
 export default Undong;
