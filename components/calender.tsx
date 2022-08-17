@@ -62,6 +62,7 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
           return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => onPress(date)}>
               <View
+                key={date.timestamp}
                 style={[
                   marking && {
                     shadowOpacity: 1,
@@ -141,7 +142,7 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
                   format(selecttoday, 'yyyy-MM-dd')
               )
               .map((item: Undongitems, index) => {
-                return <RenderCard item={item} index={index} />;
+                return <RenderCard item={item} index={index} key={item.id} />;
               })}
           </List.Section>
         </ScrollView>

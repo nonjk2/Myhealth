@@ -17,7 +17,6 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
 
   const onLayOut = useCallback(
     (e: LayoutChangeEvent) => {
-      console.log(e.nativeEvent.layout.height);
       setHeight(e.nativeEvent.layout.height - 70);
     },
     [toggle]
@@ -25,7 +24,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
   return (
     <List.Item
       title={''}
-      key={index}
+      key={item.id}
       right={() => (
         <TouchableOpacity onPress={() => setToggle(prev => !prev)}>
           <Card

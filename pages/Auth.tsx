@@ -2,6 +2,7 @@ import {
   getProfile,
   KakaoOAuthToken,
   KakaoProfile,
+  KakaoProfileNoneAgreement,
   login,
   logout,
   unlink,
@@ -15,33 +16,36 @@ import {useAppDispatch} from '../store';
 const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const dispatch = useAppDispatch();
   const [result, setResult] = useState('');
+
   const signInWithKakao = async (): Promise<void> => {
-    const token: KakaoOAuthToken = await login();
-
-    setResult(JSON.stringify(token));
+    await login()
+      .then(res =>
+        dispatch(userSlice.actions.setUser({auth: res, user: undefined}))
+      )
+      .catch(err => console.log(err));
   };
 
-  const signOutWithKakao = async (): Promise<void> => {
-    const message = await logout();
+  // const signOutWithKakao = async (): Promise<void> => {
+  //   const message = await logout();
 
-    setResult(message);
-  };
+  //   setResult(message);
+  // };
 
   const getKakaoProfile = async (): Promise<void> => {
-    const profile: KakaoProfile = await getProfile();
+    const profile: KakaoProfile | KakaoProfileNoneAgreement =
+      await getProfile();
     console.log(profile);
-    setResult(JSON.stringify(profile));
   };
 
-  const unlinkKakao = async (): Promise<void> => {
-    const message = await unlink();
+  // const unlinkKakao = async (): Promise<void> => {
+  //   const message = await unlink();
 
-    setResult(message);
-  };
+  //   setResult(message);
+  // };
 
-  const LoginmyApp = () => {
-    signInWithKakao.then(()=>)
-  }
+  // const LoginmyApp = () => {
+  //   signInWithKakao.then(()=>)
+  // }
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.greeting}>{result}</Text>

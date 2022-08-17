@@ -1,3 +1,4 @@
+import {logout} from '@react-native-seoul/kakao-login';
 import React from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {TabProps} from '../routes';
@@ -6,19 +7,16 @@ import {useAppDispatch} from '../store';
 
 const ProfilePage: React.FC<TabProps> = ({route}) => {
   const dispatch = useAppDispatch();
+  const signOutWithKakao = async (): Promise<void> => {
+    await logout()
+      .then(() => dispatch(userSlice.actions.setUser({})))
+      .catch(res => console.log(res));
+    // console.log(message);
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>여기는 ㅎㅎㅎ {route.name} 페이지에요</Text>
-      <Button
-        title="LOG Out"
-        onPress={() =>
-          dispatch(
-            userSlice.actions.setUser({
-              user: false,
-            })
-          )
-        }
-      />
+      <Button title="LOG Out" onPress={signOutWithKakao} />
     </View>
   );
 };

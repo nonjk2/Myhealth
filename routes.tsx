@@ -15,10 +15,10 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import ProfilePage from './pages/profile';
-import {useSelector} from 'react-redux';
 import {RootState} from './store/reducer';
 import ActivePage from './pages/active';
 import TabButton from './components/customTab';
+import {useAppSelector} from './store';
 
 const items = [
   {
@@ -112,7 +112,7 @@ const TabNav = (): React.ReactElement => {
 };
 
 export const AppNav = (): React.ReactElement => {
-  const user = useSelector((state: RootState) => !!state.user.user);
+  const user = useAppSelector(state => state.user.auth);
 
   return (
     <NavigationContainer>
