@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {Button, Card, TextInput} from 'react-native-paper';
 import {UndongItemType, UndongType} from '../types/undong';
@@ -19,8 +19,8 @@ type undongProp = {
 const Undong: React.FC<undongProp> = ({item, setUndongData, undongData}) => {
   const [elapsedTime, setElapsedTime] = useState(item.ActiveTime || 0);
   const [active, setActive] = useState(false);
-  const [toggle, setToggle] = useState<boolean>(true);
   const [undongDetail, setUndongDetail] = useState(item);
+  const [toggle, setToggle] = useState(false);
   const OnchangeName = useCallback(
     (text: any) => {
       setUndongDetail({...undongDetail, name: text});

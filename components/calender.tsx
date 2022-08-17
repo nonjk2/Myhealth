@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useState} from 'react';
@@ -57,12 +56,14 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
         // showWeekNumbers={true}
         hideExtraDays={false}
         showSixWeeks={true}
+        current={format(selecttoday, 'yyyy-MM-dd')}
+        animateScroll={true}
         dayComponent={({date, state, marking, onPress}: any) => {
           return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => onPress(date)}>
               <View
                 style={[
-                  true && {
+                  marking && {
                     shadowOpacity: 1,
                     shadowColor: 'cyan',
                     shadowRadius: 16,
@@ -84,7 +85,9 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
                         ? 'gray'
                         : marking
                         ? '#5585E8'
-                        : 'black',
+                        : date.timestamp === selecttoday
+                        ? 'red'
+                        : '#000',
                     margin: 2,
                   }}>
                   {date.day}
@@ -121,6 +124,7 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
           flex: 1,
           backgroundColor: '#616161',
           borderTopStartRadius: 20,
+          borderTopEndRadius: 20,
           shadowColor: '#fff',
           shadowOpacity: 0.6,
         }}>

@@ -12,6 +12,7 @@ import {List} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import useInterval from '../hooks/useInterval';
 import exerciseSlice from '../slices/exercise';
+import onToggle from '../slices/snack';
 import {useAppDispatch} from '../store';
 import {UndongItemType} from '../types/undong';
 
@@ -47,7 +48,6 @@ const StopWatch: React.FC<timerProps> = ({
   elapsedTime,
   setElapsedTime,
 }) => {
-  //   const [active, setActive] = useState(false);
   const [defalutRestTime, setDefalutRestTime] = useState(3000);
   const [timer, setTimer] = useState(defalutRestTime);
   const [startDate, setStartDate] = useState<any>(Date.now());
@@ -160,19 +160,31 @@ const StopWatch: React.FC<timerProps> = ({
     setTimer(prev => prev + time);
     leftTimeRef.current += time;
   };
-  const successAct = () => {
-    setActive(false);
-    dispatch(
-      exerciseSlice.actions.addUndong(true, undongDetail.id, {
-        id: undongDetail.id,
-        startdate: undongDetail.startdate,
-        ActiveTime: elapsedTime,
-        enddate: Date.now(),
-        name: undongDetail.name,
-        sets: lapTimes,
-      })
-    );
-  };
+  const successAct = useCallback(() => {
+    if (undongDetail.name?.length === 0) {
+      dispatch(onToggle.actions.exerciseCreate(true, 'On'));
+    } else {
+      setActive(false);
+      dispatch(
+        exerciseSlice.actions.addUndong(true, undongDetail.id, {
+          id: undongDetail.id,
+          startdate: undongDetail.startdate,
+          ActiveTime: elapsedTime,
+          enddate: Date.now(),
+          name: undongDetail.name,
+          sets: lapTimes,
+        })
+      );
+    }
+  }, [
+    dispatch,
+    elapsedTime,
+    lapTimes,
+    setActive,
+    undongDetail.id,
+    undongDetail.name,
+    undongDetail.startdate,
+  ]);
 
   return (
     <View style={[]}>

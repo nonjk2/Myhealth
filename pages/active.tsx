@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Animated,
@@ -7,16 +6,16 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {TabProps} from '../routes';
-import {Avatar, Card} from 'react-native-paper';
+import {Avatar, Card, Snackbar} from 'react-native-paper';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import Undong from '../components/undong';
 import {UndongItemType, UndongType} from '../types/undong';
-import {useSelector} from 'react-redux';
-import {Undongitems} from '../slices/exercise';
 import {useAppSelector} from '../store';
+import {useDispatch} from 'react-redux';
+import onToggle from '../slices/snack';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -37,6 +36,9 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
   );
   const [clockToggle, setClockToggle] = useState<boolean>(true);
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
+  const snackToggle = useAppSelector(state => state.snack.toggle);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -161,6 +163,21 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
       <Text style={styles.toggleCurrentTimeOnoff}>
         {clockToggle ? 'ON' : 'OFF'}
       </Text>
+      <Snackbar
+        visible={snackToggle}
+        onDismiss={() =>
+          dispatch(onToggle.actions.exerciseCreate(false, 'Off'))
+        }
+        style={{position: 'absolute', bottom: 0}}
+        duration={3000}
+        action={{
+          label: '닫기',
+          onPress: () => {
+            dispatch(onToggle.actions.exerciseCreate(false, 'Off'));
+          },
+        }}>
+        운동이름을 넣어주세요!
+      </Snackbar>
     </SafeAreaView>
   );
 };
