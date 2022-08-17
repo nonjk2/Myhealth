@@ -1,36 +1,75 @@
-import React from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {
+  getProfile,
+  KakaoOAuthToken,
+  KakaoProfile,
+  login,
+  logout,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+import React, {useState} from 'react';
+import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {AuthProps} from '../routes';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
 
 const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const dispatch = useAppDispatch();
+  const [result, setResult] = useState('');
+  const signInWithKakao = async (): Promise<void> => {
+    const token: KakaoOAuthToken = await login();
+
+    setResult(JSON.stringify(token));
+  };
+
+  const signOutWithKakao = async (): Promise<void> => {
+    const message = await logout();
+
+    setResult(message);
+  };
+
+  const getKakaoProfile = async (): Promise<void> => {
+    const profile: KakaoProfile = await getProfile();
+    console.log(profile);
+    setResult(JSON.stringify(profile));
+  };
+
+  const unlinkKakao = async (): Promise<void> => {
+    const message = await unlink();
+
+    setResult(message);
+  };
+
+  const LoginmyApp = () => {
+    signInWithKakao.then(()=>)
+  }
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>여기는 로그인 페이지요 ㅎㅎ</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.greeting}>{result}</Text>
 
       <View>
+        <Button title="LOGIN" onPress={signInWithKakao} />
         <Button
-          title="LOGIN"
-          onPress={() =>
-            dispatch(
-              userSlice.actions.setUser({
-                user: true,
-              })
-            )
+          title="getProfile"
+          onPress={
+            // () =>
+            // dispatch(
+            //   userSlice.actions.setUser({
+            //     user: true,
+            //   })
+            // )
+            getKakaoProfile
           }
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   greeting: {
     fontSize: 20,

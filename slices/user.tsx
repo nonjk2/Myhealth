@@ -1,15 +1,18 @@
+import {KakaoOAuthToken, KakaoProfile} from '@react-native-seoul/kakao-login';
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState = {
-  user: false,
-};
+interface userType {
+  user: KakaoProfile;
+  auth: KakaoOAuthToken;
+}
 
 const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: {} as userType,
   reducers: {
     setUser(state, action) {
       state.user = action.payload.user;
+      state.auth = action.payload.auth;
     },
   },
   //   extraReducers: builder => {},

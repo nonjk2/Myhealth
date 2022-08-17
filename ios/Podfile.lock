@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.5.0)
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -73,6 +74,45 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
+  - kakao-login (4.2.3):
+    - KakaoSDK (= 2.9.0)
+    - KakaoSDKAuth (= 2.9.0)
+    - KakaoSDKCommon (= 2.9.0)
+    - KakaoSDKTalk (= 2.9.0)
+    - KakaoSDKUser (= 2.9.0)
+    - React
+  - KakaoSDK (2.9.0):
+    - KakaoSDKAuth (= 2.9.0)
+    - KakaoSDKCommon (= 2.9.0)
+    - KakaoSDKLink (= 2.9.0)
+    - KakaoSDKNavi (= 2.9.0)
+    - KakaoSDKStory (= 2.9.0)
+    - KakaoSDKTalk (= 2.9.0)
+    - KakaoSDKTemplate (= 2.9.0)
+    - KakaoSDKUser (= 2.9.0)
+  - KakaoSDKAuth (2.9.0):
+    - KakaoSDKCommon (= 2.9.0)
+  - KakaoSDKCommon (2.9.0):
+    - KakaoSDKCommon/Common (= 2.9.0)
+    - KakaoSDKCommon/Network (= 2.9.0)
+  - KakaoSDKCommon/Common (2.9.0)
+  - KakaoSDKCommon/Network (2.9.0):
+    - Alamofire (~> 5.1)
+    - KakaoSDKCommon/Common (= 2.9.0)
+  - KakaoSDKLink (2.9.0):
+    - KakaoSDKCommon (= 2.9.0)
+    - KakaoSDKTemplate (= 2.9.0)
+  - KakaoSDKNavi (2.9.0):
+    - KakaoSDKCommon/Common (= 2.9.0)
+  - KakaoSDKStory (2.9.0):
+    - KakaoSDKUser (= 2.9.0)
+  - KakaoSDKTalk (2.9.0):
+    - KakaoSDKTemplate (= 2.9.0)
+    - KakaoSDKUser (= 2.9.0)
+  - KakaoSDKTemplate (2.9.0):
+    - KakaoSDKCommon/Common (= 2.9.0)
+  - KakaoSDKUser (2.9.0):
+    - KakaoSDKAuth (= 2.9.0)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.06.28.00-v2):
@@ -288,6 +328,8 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
+  - react-native-splash-screen (3.3.0):
+    - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
     - React-Core/RCTActionSheetHeaders (= 0.68.2)
@@ -417,6 +459,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.125.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - "kakao-login (from `../node_modules/@react-native-seoul/kakao-login`)"
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -434,6 +477,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -453,6 +497,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - CocoaAsyncSocket
     - Flipper
     - Flipper-Boost-iOSX
@@ -464,6 +509,15 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - KakaoSDK
+    - KakaoSDKAuth
+    - KakaoSDKCommon
+    - KakaoSDKLink
+    - KakaoSDKNavi
+    - KakaoSDKStory
+    - KakaoSDKTalk
+    - KakaoSDKTemplate
+    - KakaoSDKUser
     - libevent
     - OpenSSL-Universal
     - SocketRocket
@@ -480,6 +534,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  kakao-login:
+    :path: "../node_modules/@react-native-seoul/kakao-login"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -508,6 +564,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -542,6 +600,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
@@ -558,6 +617,16 @@ SPEC CHECKSUMS:
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 476ee3e89abb49e07f822b48323c51c57124b572
+  kakao-login: 6c75ad420e66f0708eb109d39212650906bd39f2
+  KakaoSDK: d5a5a38ebf4da97beeecf100ac3dc9a020e19648
+  KakaoSDKAuth: 5d9eec3317320dc60015ba8d597b2ad32fc70b1a
+  KakaoSDKCommon: aaed06bb779b92cd6f5c35e94160d4ecfaaac511
+  KakaoSDKLink: 575d1119427a7b278eb49da656f8d648a0a94411
+  KakaoSDKNavi: 8b767610d59fc044f1f5df3f29c89688a446a1fc
+  KakaoSDKStory: a494a364a3539601289d01aadd117f165f39d7b2
+  KakaoSDKTalk: b0ac197fd7fce4afc9af3f012c1abee7f053c910
+  KakaoSDKTemplate: eaf03ad5e44d374cbfff85588552a5627cd0519c
+  KakaoSDKUser: 37e92bfc1d36b339420952080a8d31c217a38a63
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
@@ -574,6 +643,7 @@ SPEC CHECKSUMS:
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
+  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034

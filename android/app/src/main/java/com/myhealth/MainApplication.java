@@ -24,11 +24,10 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
-          @SuppressWarnings("UnnecessaryLocalVariable")
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          return packages;
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+            new SplashScreenReactPackage()  //here
+            );
         }
 
         @Override
@@ -41,13 +40,9 @@ public class MainApplication extends Application implements ReactApplication {
       new MainApplicationReactNativeHost(this);
 
   @Override
-  public ReactNativeHost getReactNativeHost() {
-    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      return mNewArchitectureNativeHost;
-    } else {
-      return mReactNativeHost;
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
-  }
 
   @Override
   public void onCreate() {
