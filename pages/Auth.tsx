@@ -20,7 +20,7 @@ const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const signInWithKakao = async (): Promise<void> => {
     await login()
       .then(res =>
-        dispatch(userSlice.actions.setUser({auth: res, user: undefined}))
+        dispatch(userSlice.actions.setUser({auth: res, user: {} as any}))
       )
       .catch(err => console.log(err));
   };
