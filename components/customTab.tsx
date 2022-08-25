@@ -4,12 +4,12 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 const animate1 = {
-  0: {scale: 0.5, translateY: 0},
-  1: {scale: 1.3, translateY: -15},
+  0: {scale: 0.5},
+  1: {scale: 1.3},
 };
 const animate2 = {
-  0: {scale: 1.2, translateY: -15},
-  1: {scale: 1, translateY: 0},
+  0: {scale: 1.2},
+  1: {scale: 1},
 };
 // const plusanimate1 = {
 //   0: {scale: 0.5, translateY: 0},
@@ -42,11 +42,11 @@ const TabButton: React.FC<Prop> = props => {
   useEffect(() => {
     if (focused) {
       viewRef.current.animate(animate1);
-      circleRef.current.animate(circle);
+      // circleRef.current.animate(circle);
     } else {
       viewRef.current.animate(plusanimate2);
       viewRef.current.animate(animate2);
-      circleRef.current.animate(circle2);
+      // circleRef.current.animate(circle2);
     }
   }, [focused]);
 
@@ -56,18 +56,18 @@ const TabButton: React.FC<Prop> = props => {
       onPress={onPress}
       activeOpacity={1}>
       <Animatable.View style={styles.greeting} ref={viewRef} duration={300}>
-        <Animatable.View
+        {/* <Animatable.View
           style={focused ? styles.tabButtonFocus : styles.tabButton}
           ref={circleRef}
-          duration={300}>
-          <IonIcon
-            name={focused ? item.activeIcon : item.inactiveIcon}
-            size={34}
-            color={focused ? '#101011' : '#fff'}
-            style={{}}
-          />
-        </Animatable.View>
+          duration={300}> */}
+        <IonIcon
+          name={focused ? item.activeIcon : item.inactiveIcon}
+          size={24}
+          color={focused ? '#101011' : '#fff'}
+          style={{}}
+        />
       </Animatable.View>
+      {/* </Animatable.View> */}
       <Text style={focused ? styles.tablabelFocus : styles.tablabel}>
         {item.label}
       </Text>
@@ -78,10 +78,10 @@ const TabButton: React.FC<Prop> = props => {
 const styles = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', top: 13, alignItems: 'center'},
   greeting: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#85adfd',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    // backgroundColor: '#85adfd',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tablabel: {
-    fontSize: 13,
-    color: '#000',
-    marginTop: 4,
+    fontSize: 11,
+    color: '#fff',
+    // marginTop: 4,
   },
   tablabelFocus: {
-    fontSize: 13,
-    color: '#000',
+    fontSize: 11,
+    color: '#fff',
     marginTop: 1.5,
   },
 });

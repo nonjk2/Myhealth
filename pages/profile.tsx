@@ -11,8 +11,8 @@ const ProfilePage: React.FC<TabProps> = ({route}) => {
     await logout()
       .then(() => dispatch(userSlice.actions.setUser({})))
       .catch(res => console.log(res));
-    // console.log(message);
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>여기는 ㅎㅎㅎ {route.name} 페이지에요</Text>

@@ -89,6 +89,7 @@ const TabNav = (): React.ReactElement => {
         options={{
           tabBarButton: props => <TabButton {...props} item={items[0]} />,
           headerShown: false,
+          tabBarStyle: {backgroundColor: '#000'},
         }}
       />
       <Tab.Screen
@@ -98,6 +99,7 @@ const TabNav = (): React.ReactElement => {
           tabBarButton: props => <TabButton {...props} item={items[1]} />,
           headerShown: false,
           tabBarHideOnKeyboard: true,
+          tabBarStyle: {backgroundColor: '#000'},
         }}
       />
       <Tab.Screen
@@ -105,6 +107,7 @@ const TabNav = (): React.ReactElement => {
         component={ProfilePage}
         options={{
           tabBarButton: props => <TabButton {...props} item={items[2]} />,
+          tabBarStyle: {backgroundColor: '#000'},
         }}
       />
     </Tab.Navigator>
@@ -112,13 +115,17 @@ const TabNav = (): React.ReactElement => {
 };
 
 export const AppNav = (): React.ReactElement => {
-  const user = useAppSelector(state => state.user.auth);
+  const user = useAppSelector(state => state.user.AccessToken);
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {!user ? (
-          <Stack.Screen name={HomeScreens.Auth} component={Authpage} />
+          <Stack.Screen
+            name={HomeScreens.Auth}
+            component={Authpage}
+            options={{headerShown: false}}
+          />
         ) : (
           <Stack.Screen
             name={HomeScreens.Tab}
