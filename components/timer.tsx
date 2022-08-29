@@ -1,16 +1,12 @@
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useState, useCallback, useEffect, useRef} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {List} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import useInterval from '../hooks/useInterval';
+import {useStopWatch} from '../hooks/useStopWatch';
+import {WIDTH} from '../pages/home';
 import exerciseSlice from '../slices/exercise';
 import onToggle from '../slices/snack';
 import {useAppDispatch} from '../store';
@@ -26,13 +22,8 @@ interface timestamp {
   millis: number;
 }
 
-type timerProps = {
+export type timerProps = {
   undongDetail: UndongItemType;
-  setUndongDetail: React.Dispatch<React.SetStateAction<UndongItemType>>;
-  active: boolean;
-  setActive: React.Dispatch<React.SetStateAction<boolean>>;
-  elapsedTime: number;
-  setElapsedTime: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type labTime = {
@@ -40,14 +31,10 @@ export type labTime = {
   restTime: number;
   activeTime: number;
 }[];
-const WIDTH = Dimensions.get('window').width;
-const StopWatch: React.FC<timerProps> = ({
-  undongDetail,
-  active,
-  setActive,
-  elapsedTime,
-  setElapsedTime,
-}) => {
+const StopWatch: React.FC<timerProps> = ({undongDetail}) => {
+  const {time, isRunning, start, stop} = useStopWatch();
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [active, setActive] = useState(false);
   const [defalutRestTime, setDefalutRestTime] = useState(3000);
   const [timer, setTimer] = useState(defalutRestTime);
   const [startDate, setStartDate] = useState<any>(Date.now());
@@ -90,9 +77,7 @@ const StopWatch: React.FC<timerProps> = ({
     if (toggleTimer) {
       startTimeRef.current = Date.now();
       leftTimeRef.current = timer;
-      // setIsTimerRunning(true);
     } else if (!toggleTimer || timer < 0) {
-      // setIsTimerRunning(false);
     }
   }, [timer, toggleTimer]);
   useEffect(() => {
@@ -104,17 +89,19 @@ const StopWatch: React.FC<timerProps> = ({
   const handleStartClick = useCallback(() => {
     if (!active) {
       setActive(true);
+      start;
       setStartDate(Date.now());
     }
-  }, [active, setActive]);
+  }, [active, start]);
 
   const handleStopClick = useCallback(() => {
     if (active) {
       setActive(false);
       setPausedTime(elapsedTime);
       setToggleTimer(false);
+      stop;
     }
-  }, [active, elapsedTime, setActive]);
+  }, [active, elapsedTime, stop]);
 
   const handleLapTimeClick = useCallback(() => {
     if (active) {
@@ -188,6 +175,41 @@ const StopWatch: React.FC<timerProps> = ({
 
   return (
     <View style={[]}>
+      {/* 스톱워치 */}
+      <View style={styles.timer__area}>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(time), 'mm', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'mm', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+        <View style={styles.timer__symbol}>
+          <Text style={styles.timer__symbol__text}>:</Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'ss', {
+              locale: ko,
+            }).charAt(0)}
+          </Text>
+        </View>
+        <View style={styles.timer__time__area}>
+          <Text style={styles.timer__time__text}>
+            {format(new Date(elapsedTime), 'ss', {
+              locale: ko,
+            }).charAt(1)}
+          </Text>
+        </View>
+      </View>
+      {/* 스톱워치 */}
       <View style={styles.timer__area}>
         <View style={styles.timer__time__area}>
           <Text style={styles.timer__time__text}>
@@ -352,8 +374,6 @@ const styles = StyleSheet.create({
   BigtimerView: {
     flexDirection: 'row',
     width: WIDTH,
-
-    backgroundColor: '#202020',
   },
   RestTimer: {
     textAlign: 'center',
@@ -369,7 +389,6 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
     justifyContent: 'center',
     width: WIDTH,
-    backgroundColor: '#202020',
     flexDirection: 'row',
   },
   timer__time__area: {
@@ -396,7 +415,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: WIDTH,
     left: 30,
-    backgroundColor: '#202020',
     flexDirection: 'row',
   },
   timer__rest__text: {

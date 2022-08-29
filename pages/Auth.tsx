@@ -1,22 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   getProfile,
-  KakaoOAuthToken,
-  KakaoProfile,
-  KakaoProfileNoneAgreement,
   login,
   logout,
   unlink,
 } from '@react-native-seoul/kakao-login';
 import axios, {AxiosError} from 'axios';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import {
   Alert,
-  Button,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -24,25 +19,24 @@ import Config from 'react-native-config';
 import {AuthProps} from '../routes';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
-import {WIDTH} from './home';
 
 const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const dispatch = useAppDispatch();
 
   /** 카카로 로그인임 {토큰받아옴}*/
 
-  const signInWithKakao = useCallback(async (): Promise<void> => {
+  const signInWithKakao = async (): Promise<void> => {
     await login()
       .then(getKakaoProfile)
       .catch(err => console.log('카카오로그인에러', err));
-  }, []);
+  };
 
   /**
    카카오 프로필 가져오기
    */
   const getKakaoProfile = async (): Promise<void> => {
     await getProfile()
-      .then(async (res: KakaoProfileNoneAgreement | KakaoProfile) => {
+      .then(async (res: any) => {
         try {
           const Response = await axios.post(
             `${Config.API_URI}/users`,
@@ -79,9 +73,6 @@ const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
     console.log(message);
   };
 
-  // const LoginmyApp = () => {
-  //   signInWithKakao.then(()=>)
-  // }
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

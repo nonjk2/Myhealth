@@ -26,7 +26,7 @@ interface Props {
   title: string;
 }
 
-const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
+const ActivePage: React.FC<TabProps> = ({navigation}) => {
   const [currentTime, setCurrentTime] = useState<string>(
     format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
   );
@@ -38,31 +38,6 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   const snackToggle = useAppSelector(state => state.snack.toggle);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(neonAnimate, {
-          duration: 500,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(neonAnimate, {
-          duration: 100,
-          toValue: 0,
-          useNativeDriver: true,
-        }),
-        Animated.timing(neonAnimate, {
-          duration: 400,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]),
-      {
-        iterations: -1,
-      }
-    ).start();
-  }, [neonAnimate, undongData]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -78,30 +53,17 @@ const ActivePage: React.FC<TabProps> = ({route}: TabProps) => {
           item={item}
           setUndongData={setUndongData}
           undongData={undongData}
+          navigation={navigation}
         />
       );
     },
-    [undongData]
+    [navigation, undongData]
   );
   return (
     <SafeAreaView style={styles.container}>
       {clockToggle ? (
         <Card style={styles.cardContainer}>
           <Card.Content style={{alignItems: 'center'}}>
-            <Animated.Text
-              style={[
-                styles.neon,
-                {
-                  shadowOpacity: neonAnimate,
-                  shadowColor: 'cyan',
-                  color: 'cyan',
-                  fontSize: 20,
-                },
-              ]}>
-              {currentTime.split(' ')[0].split('.')[0]}년{' '}
-              {currentTime.split(' ')[0].split('.')[1]}월{' '}
-              {currentTime.split(' ')[0].split('.')[2]}일
-            </Animated.Text>
             <Animated.Text
               style={[
                 styles.neon,

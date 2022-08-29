@@ -38,7 +38,6 @@ const TabButton: React.FC<Prop> = props => {
   const {item, onPress, accessibilityState} = props;
   const focused = accessibilityState.selected;
   const viewRef = useRef<any>(null);
-  const circleRef = useRef<any>(null);
   useEffect(() => {
     if (focused) {
       viewRef.current.animate(animate1);

@@ -19,6 +19,8 @@ import {RootState} from './store/reducer';
 import ActivePage from './pages/active';
 import TabButton from './components/customTab';
 import {useAppSelector} from './store';
+import Playpage from './pages/play';
+import {timerProps} from './components/timer';
 
 const items = [
   {
@@ -41,6 +43,7 @@ const items = [
 export enum HomeScreens {
   Auth = 'Auth',
   Tab = 'Tab',
+  Play = 'Play',
 }
 export enum TabScreens {
   Home = 'Home',
@@ -55,9 +58,11 @@ export type TabParamList = {
 export type HomeParamList = {
   Auth: {setuser: Dispatch<SetStateAction<boolean>>};
   Tab: undefined;
+  Play: timerProps;
 };
 
 export type AuthProps = NativeStackScreenProps<HomeParamList, 'Auth'>;
+export type PlayProps = NativeStackScreenProps<HomeParamList, 'Play'>;
 export type TabProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Home'>,
   NativeStackScreenProps<HomeParamList>
@@ -133,6 +138,11 @@ export const AppNav = (): React.ReactElement => {
             options={{headerShown: false}}
           />
         )}
+        <Stack.Screen
+          name={HomeScreens.Play}
+          component={Playpage}
+          options={{headerShown: false}}
+        />
         {/* <Stack.Screen name={HomeScreens.Home} component={TabNav} /> */}
       </Stack.Navigator>
     </NavigationContainer>
