@@ -20,7 +20,7 @@ import ActivePage from './pages/active';
 import TabButton from './components/customTab';
 import {useAppSelector} from './store';
 import Playpage from './pages/play';
-import {timerProps} from './components/timer';
+import {timerProps} from './components/playUndong/timer';
 
 const items = [
   {

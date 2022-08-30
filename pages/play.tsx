@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import StopWatch from '../components/timer';
+import StopWatch from '../components/playUndong/stopWatch';
 import {PlayProps} from '../routes';
 
 const Playpage: React.FC<PlayProps> = ({route}) => {

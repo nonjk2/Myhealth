@@ -1,4 +1,4 @@
-import {labTime} from '../components/timer';
+import {labTime} from '../components/playUndong/timer';
 
 export type UndongType = {
   id: number | 0;

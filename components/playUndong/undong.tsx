@@ -1,19 +1,13 @@
 import React, {useCallback, useState} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {Button, Card, TextInput} from 'react-native-paper';
-import {UndongItemType, UndongType} from '../types/undong';
-import StopWatch from './timer';
-import Collapsible from 'react-native-collapsible';
-import {format} from 'date-fns';
-import {ko} from 'date-fns/locale';
+import {StyleSheet, View} from 'react-native';
+import {Card, TextInput} from 'react-native-paper';
+import {UndongItemType, UndongType} from '../../types/undong';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {useAppSelector} from '../store';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeParamList, TabParamList} from '../routes';
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
+import {HomeParamList, TabParamList} from '../../routes';
+import {WIDTH} from '../../pages/home';
 
 type undongProp = {
   item: UndongItemType;
@@ -30,8 +24,6 @@ const Undong: React.FC<undongProp> = ({
   setUndongData,
   undongData,
 }) => {
-  const [elapsedTime, setElapsedTime] = useState(item.ActiveTime || 0);
-  const [active, setActive] = useState(false);
   const [undongDetail, setUndongDetail] = useState(item);
   const OnchangeName = useCallback(
     (text: any) => {
@@ -42,9 +34,6 @@ const Undong: React.FC<undongProp> = ({
   const EraseText = useCallback(() => {
     setUndongDetail({...undongDetail, name: ''});
   }, [undongDetail]);
-  const myexercise = useAppSelector(state =>
-    state.exercise.find(e => e.id === item.id)
-  );
   return (
     <View style={styles.itemView}>
       <Card style={[styles.toggleOnCard]}>
@@ -60,7 +49,6 @@ const Undong: React.FC<undongProp> = ({
                   placeholder: 'white',
                   text: 'white',
                   primary: 'white',
-                  // underlineColor: 'transparent',
                   background: '#202020',
                 },
               }}
@@ -81,7 +69,6 @@ const Undong: React.FC<undongProp> = ({
                 ) : null
               }
             />
-
             <View
               style={{
                 alignItems: 'center',
@@ -112,22 +99,6 @@ const Undong: React.FC<undongProp> = ({
               />
             </View>
           </View>
-
-          {/* <Collapsible collapsed={toggle}>
-            <Card.Content
-              style={{height: HEIGHT, width: WIDTH, alignItems: 'center'}}>
-              <View style={styles.cardContainerView}>
-                <StopWatch
-                  undongDetail={undongDetail}
-                  setUndongDetail={setUndongDetail}
-                  active={active}
-                  setActive={setActive}
-                  elapsedTime={elapsedTime}
-                  setElapsedTime={setElapsedTime}
-                />
-              </View>
-            </Card.Content>
-          </Collapsible> */}
         </Card.Content>
       </Card>
     </View>

@@ -11,7 +11,7 @@ import {TabProps} from '../routes';
 import {Avatar, Card, Snackbar} from 'react-native-paper';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
-import Undong from '../components/undong';
+import Undong from '../components/playUndong/undong';
 import {UndongItemType, UndongType} from '../types/undong';
 import {useAppSelector} from '../store';
 import {useDispatch} from 'react-redux';
@@ -86,7 +86,6 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
         data={undongData}
         renderItem={renderUndong}
         style={{marginTop: 30}}
-        keyExtractor={item => item.id}
         extraData={undongData}
       />
       <TouchableOpacity
