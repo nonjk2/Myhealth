@@ -8,21 +8,17 @@ const LapRow = ({
   lap,
   time,
   isFirst,
-  isRest,
-  restTime,
-  rest,
+  currentRestTime,
 }: {
   lap: number;
   currentRestTime?: string;
-  time?: string;
-  restTime?: string;
+  time: string;
   isFirst: boolean;
-  isRest: boolean;
-  rest?: string;
   style?: 'green' | 'red';
 }) => {
   const rowStyles: ViewStyle[] = [styles.lapRow];
   const cardStyles: ViewStyle[] = [styles.lapRowCard];
+
   if (isFirst) {
     cardStyles.push({backgroundColor: '#0eb743b9'});
   }
@@ -32,10 +28,8 @@ const LapRow = ({
       <Card.Content>
         <View style={rowStyles}>
           <Title>{lap}set</Title>
-          <Text style={styles.lapText}>{isRest ? rest : restTime}</Text>
-          {/* //왼쪽// */}
-          <Text style={styles.lapText}>{isRest ? restTime : time}</Text>
-          {/* //오른쪽// */}
+          <Text style={styles.lapText}>{currentRestTime}</Text>
+          <Text style={styles.lapText}>{time}</Text>
         </View>
       </Card.Content>
     </Card>
@@ -47,9 +41,7 @@ type LapListProps = {
   currentLapTime: string;
   fastestLapTime: string;
   slowestLapTime: string;
-  isRest: boolean;
   currentRestTime: string;
-  restTime: string;
   laps: LapData[];
 };
 
@@ -57,8 +49,6 @@ export const LapList = ({
   hasStarted,
   currentLapTime,
   laps,
-  isRest,
-  restTime,
   currentRestTime,
 }: LapListProps) => {
   return (
@@ -68,21 +58,17 @@ export const LapList = ({
           time={currentLapTime}
           lap={laps.length + 1}
           isFirst
-          isRest={isRest}
-          rest={currentRestTime}
-          restTime={restTime}
+          currentRestTime={currentRestTime}
         />
       )}
       {laps.map(lapInfo => {
         return (
           <LapRow
             key={lapInfo.lap}
-            restTime={lapInfo.rest}
             time={lapInfo.time}
-            rest={lapInfo.time}
             lap={lapInfo.lap}
+            currentRestTime={lapInfo.rest}
             isFirst={false}
-            isRest={false}
           />
         );
       })}

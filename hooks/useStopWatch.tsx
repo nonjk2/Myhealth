@@ -2,14 +2,14 @@ import {useState, useRef, useEffect} from 'react';
 export type LapData = {
   time: string;
   lap: number;
-  rest?: string;
+  rest: string;
 };
 /** 시간에 0 붙이기 */
 const padStart = (num: number) => {
   return num.toString().padStart(2, '0');
 };
 /** 시간 포멧팅 */
-export const formatMs = (milliseconds: number) => {
+const formatMs = (milliseconds: number) => {
   let seconds = Math.floor(milliseconds / 1000);
   let minutes = Math.floor(seconds / 60);
   let hours = Math.floor(minutes / 60);
@@ -29,13 +29,15 @@ export const formatMs = (milliseconds: number) => {
 export const useStopWatch = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [isRest, setIsRest] = useState(false);
+  const [isResting, setIsResting] = useState(false);
+  const [currentTime, setcurrentTime] = useState(0);
   const [startTime, setStartTime] = useState<number>(0);
   const [timeWhenLastStopped, setTimeWhenLastStopped] = useState<number>(0);
   const [laps, setLaps] = useState<number[]>([]);
-  const [restTime, setRestTime] = useState<number>(0);
+  const [restlaps, setRestLaps] = useState<number[]>([]);
 
   const interval = useRef<ReturnType<typeof setInterval>>();
+
   useEffect(() => {
     if (startTime > 0) {
       interval.current = setInterval(() => {
@@ -45,9 +47,11 @@ export const useStopWatch = () => {
       if (interval.current) {
         clearInterval(interval.current);
         interval.current = undefined;
-        console.log('종료됨');
       }
-      return () => clearInterval(interval.current);
+      return () => {
+        clearInterval(interval.current);
+        interval.current = undefined;
+      };
     }
   }, [startTime, timeWhenLastStopped]);
   /** 시작 */
@@ -69,18 +73,17 @@ export const useStopWatch = () => {
     setTimeWhenLastStopped(0);
     setTime(0);
     setLaps([]);
-    setIsRest(false);
-    setRestTime(0);
+    setRestLaps([]);
+    setIsResting(false);
   };
-  const restStart = () => {
-    const RestStartTime = laps[0] ? time - laps[laps.length - 1] || 0 : time;
-    setIsRest(true);
-    setRestTime(RestStartTime);
+  const lap = () => {
+    setLaps(v => [time, ...v]);
+    setIsResting(false);
   };
-  const lap = async () => {
-    await setLaps(v => [time, ...v]);
-    await setIsRest(false);
-    // setRestTime(0);
+  const rest = () => {
+    setRestLaps(v => [time, ...v]);
+    setIsResting(true);
+    setcurrentTime(time);
   };
   let slowestLapTime: number | undefined;
   let fastestLapTime: number | undefined;
@@ -88,6 +91,9 @@ export const useStopWatch = () => {
   const formattedLapData: LapData[] = laps.map((l, index) => {
     const previousLap = laps[index + 1] || 0;
     const lapTime = l - previousLap;
+    const previousRest = isResting ? restlaps[index + 1] : restlaps[index] || 0;
+    const restTime = l - previousRest;
+
     if (!slowestLapTime || lapTime > slowestLapTime) {
       slowestLapTime = lapTime;
     }
@@ -95,27 +101,35 @@ export const useStopWatch = () => {
     if (!fastestLapTime || lapTime < fastestLapTime) {
       fastestLapTime = lapTime;
     }
+
     return {
-      time: formatMs(lapTime),
+      time: formatMs(lapTime - restTime),
       lap: laps.length - index,
-      rest: formatMs(lapTime - restTime),
+      rest: formatMs(restTime),
     };
   });
   return {
     start,
     stop,
     isRunning,
-    isRest,
     time: formatMs(time),
-    restTime: formatMs(restTime),
-    currentRestTime: formatMs(time - restTime || 0),
     reset,
+    rest,
+    isResting,
+    currentRestTime: isResting
+      ? formatMs(time - restlaps[0] || 0) // Rlap[1] = 10 //rap[0] = 14.51
+      : formatMs(0),
     lap,
     laps: formattedLapData,
-    currentLapTime: laps[0] ? formatMs(time - laps[0] || 0) : formatMs(time),
+    currentLapTime: laps[0]
+      ? isResting
+        ? formatMs(currentTime - laps[0]) // 15초 - 11초 - 15초
+        : formatMs(time - laps[0] || 0) // 쉬는시간x 랩이있을떄
+      : isResting
+      ? formatMs(restlaps[0])
+      : formatMs(time),
     hasStarted: time > 0,
     slowestLapTime: formatMs(slowestLapTime || 0),
     fastestLapTime: formatMs(fastestLapTime || 0),
-    restStart,
   };
 };

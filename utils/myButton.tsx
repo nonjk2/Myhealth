@@ -11,6 +11,7 @@ type MyButtonProps = {
     textColor?: string;
     nagativeTextColor?: string;
   };
+  disabled?: boolean;
 };
 
 export const MyButton = ({
@@ -18,9 +19,10 @@ export const MyButton = ({
   children,
   isRunning,
   theme,
+  disabled,
 }: MyButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8} disabled={disabled}>
       <View
         style={[
           styles.btnBorder,

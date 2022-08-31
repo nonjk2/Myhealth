@@ -13,14 +13,13 @@ const StopWatch: React.FC<any> = ({}) => {
     reset,
     lap,
     laps,
-    isRest,
+    isResting,
+    currentRestTime,
+    rest,
     currentLapTime,
     hasStarted,
     slowestLapTime,
     fastestLapTime,
-    restStart,
-    currentRestTime,
-    restTime,
   } = useStopWatch();
 
   return (
@@ -32,7 +31,7 @@ const StopWatch: React.FC<any> = ({}) => {
         <View style={styles.row}>
           <MyButton
             onPress={() => {
-              isRunning ? lap() : reset();
+              isRunning ? (isResting ? lap() : rest()) : reset();
             }}
             isRunning={isRunning}
             theme={{
@@ -41,11 +40,11 @@ const StopWatch: React.FC<any> = ({}) => {
               textColor: '#ffffff',
               nagativeTextColor: '#ffffff',
             }}>
-            {isRunning ? '랩' : '재설정'}
+            {isRunning ? (isResting ? '랩' : '쉬는시간') : '재설정'}
           </MyButton>
           <MyButton
             onPress={() => {
-              isRunning ? restStart() : start();
+              isRunning ? rest() : start();
             }}
             isRunning={isRunning}
             theme={{
@@ -54,7 +53,7 @@ const StopWatch: React.FC<any> = ({}) => {
               textColor: 'rgb(255,0,0)',
               nagativeTextColor: 'rgb(124,252,0)',
             }}>
-            {isRunning ? '쉬는시간' : '기록하기'}
+            {isRunning ? (isResting ? 'ON' : 'OFF') : '기록하기'}
           </MyButton>
           <MyButton
             onPress={() => {
@@ -74,12 +73,10 @@ const StopWatch: React.FC<any> = ({}) => {
         <LapList
           hasStarted={hasStarted}
           currentLapTime={currentLapTime}
+          currentRestTime={currentRestTime}
           laps={laps}
-          isRest={isRest}
-          restTime={restTime}
           fastestLapTime={fastestLapTime}
           slowestLapTime={slowestLapTime}
-          currentRestTime={currentRestTime}
         />
       </View>
     </SafeAreaView>
