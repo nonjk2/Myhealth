@@ -1,28 +1,16 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {UndongItemType} from '../types/undong';
+import {ResponseUndongData} from '../types/Posts/posts';
 
-export interface Undongitems {
-  complete: boolean;
-  id: number;
-  undongDetail: UndongItemType;
-  user?: [];
+interface Undongitems {
+  undongs: ResponseUndongData;
 }
 
 const exerciseSlice = createSlice({
   name: 'exercise',
-  initialState: [] as Undongitems[],
+  initialState: {} as Undongitems,
   reducers: {
-    addUndong: {
-      reducer: (state, action: PayloadAction<Undongitems>) => {
-        if (!state.map(v => v.id).includes(action.payload.id)) {
-          state.push(action.payload);
-        } else {
-          console.log('asdf');
-        }
-      },
-      prepare: (complete, id, undongDetail: UndongItemType) => {
-        return {payload: {complete, id, undongDetail}};
-      },
+    setUndongs(state, action: PayloadAction<Undongitems>) {
+      state.undongs = action.payload.undongs;
     },
   },
 });

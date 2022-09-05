@@ -89,8 +89,10 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
               name: '',
               reps: [],
               sets: [],
-              enddate: 0,
-              ActiveTime: 0,
+              enddate: '',
+              ActiveTime: '',
+              createType: '',
+              id: '',
             },
           ])
         }>

@@ -3,7 +3,7 @@ import axios, {AxiosError} from 'axios';
 import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import Config from 'react-native-config';
-import {useStopWatch} from '../../hooks/useStopWatch';
+import {formatMs, useStopWatch} from '../../hooks/useStopWatch';
 import {useAppSelector} from '../../store';
 import {UndongPost} from '../../types/Posts/posts';
 import {UndongItemType} from '../../types/undong';
@@ -40,6 +40,7 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
   const savemyUndong = useCallback(async () => {
     const myPostData: UndongPost = {
       startdate: undongDetail.startdate,
+      enddate: formatMs(Date.now()),
       activetime: time,
       name: undongDetail.name,
       sets: laps,
@@ -61,9 +62,8 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
       navigation.navigate('Active');
       setLoading(false);
     } catch (error) {
+      // eslint-disable-next-line no-shadow
       const AxiosError = (error as AxiosError).response;
-      console.log(AxiosError);
-      console.log(Token);
     } finally {
       setLoading(false);
     }

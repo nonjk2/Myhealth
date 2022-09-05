@@ -1,19 +1,23 @@
 import {LapData} from './Posts/posts';
 
 export type UndongType = {
+  id: string;
   startdate: string;
   name?: string | undefined;
   reps?: [] | undefined;
   sets?: [] | LapData;
-  enddate: number;
-  ActiveTime: number | undefined;
+  enddate: string;
+  ActiveTime: string | undefined;
+  createType: string;
 }[];
 
 export type UndongItemType = {
+  id: string;
   startdate: string;
   name?: string | undefined;
   reps?: [] | undefined;
   sets?: [] | LapData;
-  enddate: number;
-  ActiveTime: number | undefined;
+  enddate: string;
+  ActiveTime: string | undefined;
+  createType: string;
 };

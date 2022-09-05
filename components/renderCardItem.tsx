@@ -5,13 +5,13 @@ import React, {useCallback, useState} from 'react';
 import {LayoutChangeEvent, Text, TouchableOpacity, View} from 'react-native';
 import {Card, List, Paragraph} from 'react-native-paper';
 import {WIDTH} from '../pages/home';
-import {Undongitems} from '../slices/exercise';
+import {ResponseUndongArrayData} from '../types/Posts/posts';
 
 type CardProp = {
-  item: Undongitems;
+  item: ResponseUndongArrayData;
   index: number;
 };
-const RenderCard: React.FC<CardProp> = ({item, index}) => {
+const RenderCard: React.FC<CardProp> = ({item}) => {
   const [toggle, setToggle] = useState(false);
   const [height, setHeight] = useState(0);
 
@@ -39,7 +39,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                     justifyContent: 'space-between',
                   }}>
                   <Paragraph style={{fontSize: 14, fontWeight: '600'}}>
-                    {item.undongDetail.name}
+                    {item.name}
                   </Paragraph>
                   <View>
                     <Paragraph
@@ -48,29 +48,25 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                         fontWeight: '600',
                         color: 'red',
                       }}>
-                      {item.undongDetail.sets?.length}세트 완료
+                      {item.sets?.length}세트 완료
                     </Paragraph>
                   </View>
                 </View>
                 {toggle ? (
                   <List.Section>
                     <List.Subheader>
-                      운동시간 :{' '}
-                      {format(item.undongDetail.ActiveTime, 'mm 분 ss 초')}
+                      운동시간 : {item.activetime}
                     </List.Subheader>
-                    {item.undongDetail.sets?.map((e, i) => (
+                    {item.sets?.map((e, i) => (
                       <List.Item
                         style={{
                           height: 50,
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
-                        key={e.activeTime}
+                        key={e.time}
                         title={''}
-                        description={`쉬는시간 : ${format(
-                          e.restTime,
-                          'mm:ss'
-                        )}`}
+                        description={`쉬는시간 : ${e.restTime}`}
                         left={() => <Text>{i + 1}세트</Text>}
                       />
                     ))}
@@ -99,7 +95,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                   fontSize: 20,
                   fontWeight: '200',
                 }}>
-                {format(item.undongDetail.startdate, 'HH : mm')}
+                {item.startdate}
               </Text>
               <Text
                 style={{
@@ -124,9 +120,9 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                 paddingTop: 35,
                 alignItems: 'center',
               }}>
-              {item.undongDetail.sets?.map(e => (
+              {item.sets?.map(e => (
                 <View
-                  key={e.activeTime}
+                  key={e.time}
                   style={{
                     width: 60,
                     height: 30,
@@ -147,7 +143,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                   fontSize: 20,
                   fontWeight: '200',
                 }}>
-                {format(item.undongDetail.enddate, 'HH : mm')}
+                {format(new Date(item.createdAt), 'HH : mm')}
               </Text>
               <Text
                 style={{
@@ -174,7 +170,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                 fontSize: 20,
                 fontWeight: '200',
               }}>
-              {format(item.id, 'HH : mm')}
+              {format(new Date(item.createdAt), 'HH : mm')}
             </Text>
             <Text
               style={{
@@ -182,7 +178,7 @@ const RenderCard: React.FC<CardProp> = ({item, index}) => {
                 fontSize: 16,
                 fontWeight: '200',
               }}>
-              {format(item.id, 'EEE')}
+              {format(new Date(item.createdAt), 'EEE')}
             </Text>
           </View>
         )

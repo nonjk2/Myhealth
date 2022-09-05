@@ -1,23 +1,16 @@
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import React, {useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
 import {List} from 'react-native-paper';
-import {Undongitems} from '../slices/exercise';
 import {LOCALEKR} from '../src/data/calenderLocale';
+import {useAppSelector} from '../store';
 import RenderCard from './renderCardItem';
 
 type Props = {
   date: Date;
   onChange: (value: Date) => void;
-  exercise: Undongitems[];
 };
 export type WeekDay = {
   formatted: string;
@@ -26,10 +19,11 @@ export type WeekDay = {
 };
 LocaleConfig.locales.fr = LOCALEKR;
 LocaleConfig.defaultLocale = 'fr';
-const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
+const WeekCalendar: React.FC<Props> = ({}) => {
   const [selecttoday, setSelectToday] = useState(Date.now());
+  const exercise = useAppSelector(state => state.exercise.undongs);
   const ActiveDate = exercise
-    .map(e => format(e.id, 'yyyy-MM-dd'))
+    .map(e => format(new Date(e.createdAt), 'yyyy-MM-dd'))
     .reduce((acc: any, cur: any) => {
       if (cur in acc) {
       } else {
@@ -37,7 +31,6 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
       }
       return acc;
     }, {});
-
   return (
     <View style={{flex: 1}}>
       <CalendarList
@@ -138,10 +131,10 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
             {exercise
               .filter(
                 e =>
-                  format(e.id, 'yyyy-MM-dd') ===
+                  format(new Date(e.createdAt), 'yyyy-MM-dd') ===
                   format(selecttoday, 'yyyy-MM-dd')
               )
-              .map((item: Undongitems, index) => {
+              .map((item, index) => {
                 return <RenderCard item={item} index={index} key={item.id} />;
               })}
           </List.Section>
@@ -151,6 +144,6 @@ const WeekCalendar: React.FC<Props> = ({date, onChange, exercise}) => {
   );
 };
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
 
 export default WeekCalendar;

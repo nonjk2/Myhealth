@@ -6,7 +6,7 @@ import {
   unlink,
 } from '@react-native-seoul/kakao-login';
 import axios, {AxiosError} from 'axios';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Alert,
   Image,
@@ -19,12 +19,45 @@ import Config from 'react-native-config';
 import {AuthProps} from '../routes';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import SplashScreen from 'react-native-splash-screen';
 
 const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const dispatch = useAppDispatch();
 
   /** 카카로 로그인임 {토큰받아옴}*/
+  useEffect(() => {
+    const getTokenAndAutoLogin = async () => {
+      try {
+        const token = await EncryptedStorage.getItem('AccessToken');
 
+        if (!token) {
+          return;
+        }
+        const response = await axios.get(`${Config.API_URI}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        /** 원래는 RefreshToken 검증후 AccessToken을 새로 발급받아야함 */
+        dispatch(
+          userSlice.actions.setUser({
+            AccessToken: token,
+            email: response.data.data.email,
+          })
+        );
+      } catch (error) {
+        console.log(error);
+        /** 토큰 만료시간 서버에서 확인후 res에서 올 코드 */
+        // if ((error as AxiosError).response?.data.code === 'expried') {
+        //   console.log('토큰만료');
+        // }
+      } finally {
+        SplashScreen.hide();
+      }
+    };
+    getTokenAndAutoLogin();
+  }, [dispatch]);
   const signInWithKakao = async (): Promise<void> => {
     await login()
       .then(getKakaoProfile)
@@ -51,6 +84,10 @@ const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
               AccessToken: Response.data.data.Accesstoken,
               email: res.email,
             })
+          );
+          EncryptedStorage.setItem(
+            'AccessToken',
+            Response.data.data.Accesstoken
           );
         } catch (error) {
           const errorResponse: any = (error as AxiosError).response;
