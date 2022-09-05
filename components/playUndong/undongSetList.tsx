@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, ScrollView, ViewStyle, View, Text} from 'react-native';
 import {Card, Title} from 'react-native-paper';
-
-import {LapData} from '../../hooks/useStopWatch';
+import {LapData} from '../../types/Posts/posts';
 
 const LapRow = ({
   lap,
@@ -67,7 +66,7 @@ export const LapList = ({
             key={lapInfo.lap}
             time={lapInfo.time}
             lap={lapInfo.lap}
-            currentRestTime={lapInfo.rest}
+            currentRestTime={lapInfo.restTime}
             isFirst={false}
           />
         );

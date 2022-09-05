@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 
 type MyButtonProps = {
   onPress: () => void;
@@ -12,6 +13,7 @@ type MyButtonProps = {
     nagativeTextColor?: string;
   };
   disabled?: boolean;
+  isLoading?: boolean;
 };
 
 export const MyButton = ({
@@ -20,6 +22,7 @@ export const MyButton = ({
   isRunning,
   theme,
   disabled,
+  isLoading,
 }: MyButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8} disabled={disabled}>
@@ -39,15 +42,21 @@ export const MyButton = ({
                 : theme?.nagativeBtnColor,
             },
           ]}>
-          <Text
-            style={[
-              styles.text,
-              {
-                color: isRunning ? theme?.textColor : theme?.nagativeTextColor,
-              },
-            ]}>
-            {children}
-          </Text>
+          {!isLoading ? (
+            <Text
+              style={[
+                styles.text,
+                {
+                  color: isRunning
+                    ? theme?.textColor
+                    : theme?.nagativeTextColor,
+                },
+              ]}>
+              {children}
+            </Text>
+          ) : (
+            <ActivityIndicator animating={true} />
+          )}
         </View>
       </View>
     </TouchableOpacity>

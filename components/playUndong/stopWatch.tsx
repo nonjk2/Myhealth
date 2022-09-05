@@ -1,10 +1,24 @@
-import React from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import axios, {AxiosError} from 'axios';
+import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import Config from 'react-native-config';
 import {useStopWatch} from '../../hooks/useStopWatch';
+import {useAppSelector} from '../../store';
+import {UndongPost} from '../../types/Posts/posts';
+import {UndongItemType} from '../../types/undong';
 import {MyButton} from '../../utils/myButton';
 import {LapList} from './undongSetList';
 
-const StopWatch: React.FC<any> = ({}) => {
+type stopWatchProp = {
+  undongDetail: UndongItemType;
+  route: any;
+  navigation: any;
+};
+
+const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
+  const {undongDetail} = route.params;
+  const [isLoading, setLoading] = useState<boolean>(false);
   const {
     time,
     isRunning,
@@ -21,6 +35,46 @@ const StopWatch: React.FC<any> = ({}) => {
     slowestLapTime,
     fastestLapTime,
   } = useStopWatch();
+  const Token = useAppSelector(state => state.user.AccessToken);
+
+  const savemyUndong = useCallback(async () => {
+    const myPostData: UndongPost = {
+      startdate: undongDetail.startdate,
+      activetime: time,
+      name: undongDetail.name,
+      sets: laps,
+    };
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${Config.API_URI}/undongs`,
+        myPostData,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+      console.log(response);
+      navigation.navigate('Active');
+      setLoading(false);
+    } catch (error) {
+      const AxiosError = (error as AxiosError).response;
+      console.log(AxiosError);
+      console.log(Token);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    Token,
+    laps,
+    navigation,
+    time,
+    undongDetail.name,
+    undongDetail.startdate,
+  ]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -44,8 +98,9 @@ const StopWatch: React.FC<any> = ({}) => {
           </MyButton>
           <MyButton
             onPress={() => {
-              isRunning ? rest() : start();
+              savemyUndong();
             }}
+            isLoading={isLoading}
             isRunning={isRunning}
             theme={{
               btnColor: '#ff000035',
@@ -53,7 +108,7 @@ const StopWatch: React.FC<any> = ({}) => {
               textColor: 'rgb(255,0,0)',
               nagativeTextColor: 'rgb(124,252,0)',
             }}>
-            {isRunning ? (isResting ? 'ON' : 'OFF') : '기록하기'}
+            {isRunning ? (isResting ? 'ON' : 'OFF') : '저장'}
           </MyButton>
           <MyButton
             onPress={() => {

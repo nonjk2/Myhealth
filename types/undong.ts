@@ -1,21 +1,19 @@
-import {labTime} from '../components/playUndong/timer';
+import {LapData} from './Posts/posts';
 
 export type UndongType = {
-  id: number | 0;
-  startdate: number;
+  startdate: string;
   name?: string | undefined;
   reps?: [] | undefined;
-  sets?: [] | labTime;
+  sets?: [] | LapData;
   enddate: number;
   ActiveTime: number | undefined;
 }[];
 
 export type UndongItemType = {
-  id: number | 0;
-  startdate: number;
+  startdate: string;
   name?: string | undefined;
   reps?: [] | undefined;
-  sets?: [] | labTime;
+  sets?: [] | LapData;
   enddate: number;
   ActiveTime: number | undefined;
 };

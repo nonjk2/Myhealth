@@ -16,6 +16,7 @@ import {UndongItemType, UndongType} from '../types/undong';
 import {useAppSelector} from '../store';
 import {useDispatch} from 'react-redux';
 import onToggle from '../slices/snack';
+import {formatMs} from '../hooks/useStopWatch';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -30,10 +31,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
   const [currentTime, setCurrentTime] = useState<string>(
     format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
   );
-  const undongDataPatch = useAppSelector(state => state.exercise);
-  const [undongData, setUndongData] = useState<UndongType>(
-    undongDataPatch.map(e => e.undongDetail)
-  );
+  const [undongData, setUndongData] = useState<UndongType>([]);
   const [clockToggle, setClockToggle] = useState<boolean>(true);
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   const snackToggle = useAppSelector(state => state.snack.toggle);
@@ -48,16 +46,9 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
 
   const renderUndong = useCallback(
     ({item}: {item: UndongItemType}) => {
-      return (
-        <Undong
-          item={item}
-          setUndongData={setUndongData}
-          undongData={undongData}
-          navigation={navigation}
-        />
-      );
+      return <Undong item={item} navigation={navigation} />;
     },
-    [navigation, undongData]
+    [navigation]
   );
   return (
     <SafeAreaView style={styles.container}>
@@ -94,8 +85,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
           setUndongData([
             ...undongData,
             {
-              id: Date.now(),
-              startdate: Date.now(),
+              startdate: formatMs(Date.now()),
               name: '',
               reps: [],
               sets: [],

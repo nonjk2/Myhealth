@@ -5,13 +5,6 @@ import {TabProps} from '../routes';
 import {useAppSelector} from '../store';
 export const HEIGHT = Dimensions.get('window').height;
 export const WIDTH = Dimensions.get('window').width;
-interface items {
-  complete: boolean;
-  date: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
 
 const HomePage: React.FC<TabProps> = ({}) => {
   const [date, setDate] = useState(new Date());

@@ -3,11 +3,15 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import StopWatch from '../components/playUndong/stopWatch';
 import {PlayProps} from '../routes';
 
-const Playpage: React.FC<PlayProps> = ({route}) => {
+const Playpage: React.FC<PlayProps> = ({route, navigation}) => {
   const {undongDetail} = route.params;
   return (
     <SafeAreaView style={styles.container}>
-      <StopWatch undongDetail={undongDetail} />
+      <StopWatch
+        undongDetail={undongDetail}
+        route={route}
+        navigation={navigation}
+      />
     </SafeAreaView>
   );
 };

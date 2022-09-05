@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, TextInput} from 'react-native-paper';
-import {UndongItemType, UndongType} from '../../types/undong';
+import {UndongItemType} from '../../types/undong';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
@@ -11,19 +11,12 @@ import {WIDTH} from '../../pages/home';
 
 type undongProp = {
   item: UndongItemType;
-  undongData: UndongType;
-  setUndongData: React.Dispatch<React.SetStateAction<UndongType>>;
   navigation: CompositeNavigationProp<
     BottomTabNavigationProp<TabParamList, 'Home', undefined>,
     NativeStackNavigationProp<HomeParamList, 'Play'>
   >;
 };
-const Undong: React.FC<undongProp> = ({
-  navigation,
-  item,
-  setUndongData,
-  undongData,
-}) => {
+const Undong: React.FC<undongProp> = ({navigation, item}) => {
   const [undongDetail, setUndongDetail] = useState(item);
   const OnchangeName = useCallback(
     (text: any) => {
@@ -79,12 +72,6 @@ const Undong: React.FC<undongProp> = ({
                 color={'#fff'}
                 size={28}
                 style={{marginHorizontal: 10}}
-                onPress={() => {
-                  const FilterData = undongData.filter(
-                    val => val.id !== item.id
-                  );
-                  setUndongData(FilterData);
-                }}
               />
               <IonIcon
                 name={'play'}

@@ -15,12 +15,12 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import ProfilePage from './pages/profile';
-import {RootState} from './store/reducer';
+
 import ActivePage from './pages/active';
 import TabButton from './components/customTab';
 import {useAppSelector} from './store';
 import Playpage from './pages/play';
-import {timerProps} from './components/playUndong/timer';
+import {UndongItemType} from './types/undong';
 
 const items = [
   {
@@ -58,7 +58,11 @@ export type TabParamList = {
 export type HomeParamList = {
   Auth: {setuser: Dispatch<SetStateAction<boolean>>};
   Tab: undefined;
-  Play: timerProps;
+  Play: PlayParamList;
+};
+
+export type PlayParamList = {
+  undongDetail: UndongItemType;
 };
 
 export type AuthProps = NativeStackScreenProps<HomeParamList, 'Auth'>;
