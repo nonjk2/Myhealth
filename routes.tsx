@@ -98,7 +98,7 @@ const TabNav = (): React.ReactElement => {
         options={{
           tabBarButton: props => <TabButton {...props} item={items[0]} />,
           headerShown: false,
-          tabBarStyle: {backgroundColor: '#000'},
+          tabBarStyle: {backgroundColor: '#000', borderTopWidth: 0},
         }}
       />
       <Tab.Screen
@@ -108,7 +108,7 @@ const TabNav = (): React.ReactElement => {
           tabBarButton: props => <TabButton {...props} item={items[1]} />,
           headerShown: false,
           tabBarHideOnKeyboard: true,
-          tabBarStyle: {backgroundColor: '#000'},
+          tabBarStyle: {backgroundColor: '#000', borderTopWidth: 0},
         }}
       />
       <Tab.Screen
@@ -116,7 +116,8 @@ const TabNav = (): React.ReactElement => {
         component={ProfilePage}
         options={{
           tabBarButton: props => <TabButton {...props} item={items[2]} />,
-          tabBarStyle: {backgroundColor: '#000'},
+          tabBarStyle: {backgroundColor: '#000', borderTopWidth: 0},
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
