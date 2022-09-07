@@ -84,11 +84,16 @@ function Complete() {
     const formData = new FormData();
     formData.append('image', image);
     try {
-      await axios.post(`${Config.API_URL}/image`, formData, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.post(
+        `${Config.API_URI}/undongs/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
       Alert.alert('알림', '완료처리 되었습니다.');
       navigation.goBack();
       navigation.navigate('Home');

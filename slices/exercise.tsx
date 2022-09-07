@@ -1,8 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ResponseUndongData} from '../types/Posts/posts';
+import {
+  ResponseImgArrayData,
+  ResponseUndongArrayData,
+} from '../types/Posts/posts';
 
 interface Undongitems {
-  undongs: ResponseUndongData;
+  undongs: {
+    undongs: ResponseUndongArrayData[];
+    undongimg: ResponseImgArrayData[];
+  };
 }
 
 const exerciseSlice = createSlice({

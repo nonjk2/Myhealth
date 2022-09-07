@@ -33,6 +33,7 @@ export type ResponseUndongData = {
 }[];
 
 export type ResponseUndongArrayData = {
+  type?: 'undong';
   activetime: string;
   createdAt: string;
   id: string;
@@ -44,3 +45,22 @@ export type ResponseUndongArrayData = {
   __v: number;
   _id: string;
 };
+export type ResponseImgArrayData = {
+  type?: 'img';
+  _id: string;
+  myid: string;
+  imgUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
+};
+export type ResponseImgData = {
+  _id: string;
+  myid: string;
+  imgUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
+}[];
+
+export type MySheetData = ResponseImgData & ResponseUndongData;

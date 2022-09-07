@@ -21,7 +21,9 @@ LocaleConfig.locales.fr = LOCALEKR;
 LocaleConfig.defaultLocale = 'fr';
 const WeekCalendar: React.FC<Props> = ({}) => {
   const [selecttoday, setSelectToday] = useState(Date.now());
-  const exercise = useAppSelector(state => state.exercise.undongs);
+  const exercise = useAppSelector(state => state.exercise.undongs.undongs);
+  const undongImg = useAppSelector(state => state.exercise.undongs.undongimg);
+  /** 운동을 한 날짜만 표기 */
   const ActiveDate = exercise
     .map(e => format(new Date(e.createdAt), 'yyyy-MM-dd'))
     .reduce((acc: any, cur: any) => {
@@ -31,6 +33,11 @@ const WeekCalendar: React.FC<Props> = ({}) => {
       }
       return acc;
     }, {});
+  const myActivity = [...exercise, ...undongImg].filter(
+    e =>
+      format(new Date(e.createdAt), 'yyyy-MM-dd') ===
+      format(selecttoday, 'yyyy-MM-dd')
+  );
   return (
     <View style={{flex: 1}}>
       <CalendarList
@@ -128,15 +135,9 @@ const WeekCalendar: React.FC<Props> = ({}) => {
               style={{color: '#fff', fontSize: 18, fontWeight: '600'}}>
               {format(selecttoday, 'dd일 - EEE요일', {locale: ko})}
             </List.Subheader>
-            {exercise
-              .filter(
-                e =>
-                  format(new Date(e.createdAt), 'yyyy-MM-dd') ===
-                  format(selecttoday, 'yyyy-MM-dd')
-              )
-              .map((item, index) => {
-                return <RenderCard item={item} index={index} key={item.id} />;
-              })}
+            {myActivity.map((item, index) => {
+              return <RenderCard item={item} index={index} key={item._id} />;
+            })}
           </List.Section>
         </ScrollView>
       </View>
