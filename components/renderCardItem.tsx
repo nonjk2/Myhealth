@@ -10,7 +10,7 @@ import {
   ResponseUndongArrayData,
 } from '../types/Posts/posts';
 
-type MyItem = ResponseUndongArrayData | ResponseImgArrayData;
+type MyItem = ResponseUndongArrayData | ResponseImgArrayData; //
 
 type CardProp = {
   item: any;
