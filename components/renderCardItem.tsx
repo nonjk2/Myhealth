@@ -208,3 +208,6 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
 };
 
 export default RenderCard;
+
+// 1. 카드아이템 이미지도 정리
+// 2. 새배열만들어서 정리
