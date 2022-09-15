@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 import React, {useCallback, useState} from 'react';
 import {LayoutChangeEvent, Text, TouchableOpacity, View} from 'react-native';
 import Config from 'react-native-config';
@@ -14,7 +15,6 @@ type MyItem = ResponseUndongArrayData | ResponseImgArrayData; //
 
 type CardProp = {
   item: any;
-  index: number;
 };
 const RenderCard: React.FC<CardProp> = ({item}) => {
   const [toggle, setToggle] = useState(false);
@@ -22,7 +22,7 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
 
   const onLayOut = useCallback(
     (e: LayoutChangeEvent) => {
-      setHeight(e.nativeEvent.layout.height - 70);
+      setHeight(e.nativeEvent.layout.height - 120);
     },
     [toggle]
   );
@@ -33,7 +33,9 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
         title={''}
         key={item._id}
         right={() => (
-          <TouchableOpacity onPress={() => setToggle(prev => !prev)}>
+          <TouchableOpacity
+            onPress={() => setToggle(prev => !prev)}
+            activeOpacity={0.8}>
             <Card
               onLayout={onLayOut}
               style={
@@ -100,9 +102,6 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
             <View
               style={{
                 alignItems: 'center',
-                //   justifyContent: 'space-between',
-                backgroundColor: '#616161',
-                // marginLeft: 20,
                 width: WIDTH * 0.2,
               }}>
               {/* 시작 시간 */}
@@ -177,9 +176,6 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
             <View
               style={{
                 alignItems: 'center',
-                //   justifyContent: 'center',
-                backgroundColor: '#616161',
-                // marginLeft: 20,
                 width: WIDTH * 0.2,
               }}>
               <Text
@@ -196,7 +192,7 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
                   fontSize: 16,
                   fontWeight: '200',
                 }}>
-                {format(new Date(item.createdAt), 'EEE')}
+                {format(new Date(item.createdAt), 'EEE', {locale: ko})}요일
               </Text>
             </View>
           )

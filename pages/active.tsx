@@ -16,7 +16,6 @@ import {UndongItemType, UndongType} from '../types/undong';
 import {useAppSelector} from '../store';
 import {useDispatch} from 'react-redux';
 import onToggle from '../slices/snack';
-import {formatMs} from '../hooks/useStopWatch';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -75,6 +74,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
       ) : null}
       <FlatList
         data={undongData}
+        keyExtractor={item => item.id}
         renderItem={renderUndong}
         style={{marginTop: 30}}
         extraData={undongData}
@@ -85,14 +85,14 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
           setUndongData([
             ...undongData,
             {
-              startdate: formatMs(Date.now()),
+              startdate: format(Date.now(), 'HH:mm'),
               name: '',
               reps: [],
               sets: [],
               enddate: '',
               ActiveTime: '',
               createType: '',
-              id: '',
+              id: `${Date.now()}`,
             },
           ])
         }>

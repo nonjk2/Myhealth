@@ -8,6 +8,7 @@ import {name as appName} from './app.json';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {AppNav} from './routes';
 import store from './store';
+import 'react-native-gesture-handler'; // 제스쳐 핸들러 최상위 파일에 임포트
 const App = () => {
   return (
     <Provider store={store}>
