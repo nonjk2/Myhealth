@@ -4,6 +4,7 @@ import React, {useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
 import {List} from 'react-native-paper';
+import {HEIGHT, WIDTH} from '../pages/home';
 import {LOCALEKR} from '../src/data/calenderLocale';
 import {useAppSelector} from '../store';
 import RenderCard from './renderCardItem';
@@ -41,23 +42,23 @@ const WeekCalendar: React.FC<Props> = ({}) => {
   return (
     <View style={{flex: 1}}>
       <CalendarList
-        // Callback which gets executed when visible months change in scroll view. Default = undefined
+        calendarStyle={{paddingRight: 0, paddingLeft: 0}}
         markedDates={ActiveDate}
         horizontal={true}
         onDayPress={day => setSelectToday(day.timestamp)}
-        // Enable paging on horizontal, default = false
         pagingEnabled={true}
-        // Max amount of months allowed to scroll to the future. Default = 50
-        futureScrollRange={50}
-        // Enable or disable scrolling of calendar list
+        futureScrollRange={5}
+        pastScrollRange={10}
         scrollEnabled={true}
-        // Enable or disable vertical scroll indicator. Default = false
         showScrollIndicator={true}
-        // showWeekNumbers={true}
         hideExtraDays={false}
         showSixWeeks={true}
+        staticHeader={true}
+        hideArrows={true}
+        showsHorizontalScrollIndicator={true}
         current={format(selecttoday, 'yyyy-MM-dd')}
         animateScroll={true}
+        // calendarStyle={{width: WIDTH}}
         dayComponent={({date, state, marking, onPress}: any) => {
           return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => onPress(date)}>
@@ -73,9 +74,10 @@ const WeekCalendar: React.FC<Props> = ({}) => {
                   {
                     backgroundColor:
                       state === 'disabled' ? '#000' : marking ? 'cyan' : '#fff',
-                    width: 45,
-                    height: 35,
-                    borderRadius: 5,
+                    // width: 55,
+                    width: WIDTH * (1 / 7),
+                    height: HEIGHT * (1 / 9),
+                    // borderRadius: 5,
                     opacity: 0.8,
                   },
                 ]}>
@@ -107,19 +109,31 @@ const WeekCalendar: React.FC<Props> = ({}) => {
             </TouchableOpacity>
           );
         }}
+        headerStyle={{margin: 0, width: WIDTH}}
         theme={{
           calendarBackground: '#202020',
           dayTextColor: '#fff',
           monthTextColor: '#fff',
           textDisabledColor: '#202020',
           textDayFontWeight: '600',
-          weekVerticalMargin: 5,
           indicatorColor: '#fff',
           inactiveDotColor: '#fff',
+          weekVerticalMargin: 0,
+          stylesheet: {
+            'calendar-list': {
+              main: {
+                calendar: {
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                },
+              },
+            },
+          },
         }}
         // firstDay={1}
       />
-      <View
+      {/* 스타일시트 */}
+      {/* <View
         style={{
           // height: '100%',
           flex: 1,
@@ -140,7 +154,7 @@ const WeekCalendar: React.FC<Props> = ({}) => {
             })}
           </List.Section>
         </ScrollView>
-      </View>
+      </View> */}
     </View>
   );
 };
