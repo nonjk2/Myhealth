@@ -12,10 +12,10 @@ import {Avatar, Card, Snackbar} from 'react-native-paper';
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale';
 import Undong from '../components/playUndong/undong';
-import {UndongItemType, UndongType} from '../types/undong';
 import {useAppSelector} from '../store';
 import {useDispatch} from 'react-redux';
 import onToggle from '../slices/snack';
+import {ResponseUndongArrayData} from '../types/Posts/posts';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -30,7 +30,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
   const [currentTime, setCurrentTime] = useState<string>(
     format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
   );
-  const [undongData, setUndongData] = useState<UndongType>([]);
+  const [undongData, setUndongData] = useState<ResponseUndongArrayData[]>([]);
   const [clockToggle, setClockToggle] = useState<boolean>(true);
   const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   const snackToggle = useAppSelector(state => state.snack.toggle);
@@ -44,11 +44,12 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
   }, []);
 
   const renderUndong = useCallback(
-    ({item}: {item: UndongItemType}) => {
+    ({item}: {item: ResponseUndongArrayData}) => {
       return <Undong item={item} navigation={navigation} />;
     },
     [navigation]
   );
+
   return (
     <SafeAreaView style={styles.container}>
       {clockToggle ? (
@@ -87,12 +88,15 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
             {
               startdate: format(Date.now(), 'HH:mm'),
               name: '',
-              reps: [],
+              // reps: [],
               sets: [],
-              enddate: '',
-              ActiveTime: '',
-              createType: '',
-              id: `${Date.now()}`,
+              __v: 0,
+              _id: '',
+              activetime: '',
+              createdAt: '',
+              id: '',
+              myid: '',
+              updatedAt: '',
             },
           ])
         }>

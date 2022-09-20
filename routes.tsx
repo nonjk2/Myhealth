@@ -20,23 +20,24 @@ import ActivePage from './pages/active';
 import TabButton from './components/customTab';
 import {useAppSelector} from './store';
 import Playpage from './pages/play';
-import {UndongItemType} from './types/undong';
+
+import {ResponseUndongArrayData} from './types/Posts/posts';
 
 const items = [
   {
-    activeIcon: 'calendar-outline',
+    activeIcon: 'calendar',
     label: '홈',
-    inactiveIcon: 'calendar',
+    inactiveIcon: 'calendar-outline',
   },
   {
-    activeIcon: 'map-outline',
+    activeIcon: 'walk',
     label: '시작하기',
-    inactiveIcon: 'map',
+    inactiveIcon: 'walk-outline',
   },
   {
-    activeIcon: 'person-circle-outline',
-    label: '프로필',
-    inactiveIcon: 'person-circle',
+    activeIcon: 'camera',
+    label: '사진',
+    inactiveIcon: 'camera-outline',
   },
 ];
 
@@ -62,7 +63,7 @@ export type HomeParamList = {
 };
 
 export type PlayParamList = {
-  undongDetail: UndongItemType;
+  undongDetail: ResponseUndongArrayData;
 };
 
 export type AuthProps = NativeStackScreenProps<HomeParamList, 'Auth'>;

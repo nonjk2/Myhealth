@@ -21,7 +21,6 @@ import {
   BottomSheetSectionListMethods,
 } from '@gorhom/bottom-sheet';
 import {ko} from 'date-fns/locale';
-import {Ref} from 'react';
 type Props = {
   date: Date;
   onChange: (value: Date) => void;
@@ -112,6 +111,7 @@ const WeekCalendar: React.FC<Props> = ({}) => {
     rr === 0 ? null : setAddSection([sections[rr - 1].title, ...addSection]);
     setLoading(false);
   }, [addSection, rr, sections]);
+
   const renderSectionHeader = useCallback(
     ({section}: any) => (
       <View style={styles.sectionHeaderContainer}>

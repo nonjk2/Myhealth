@@ -1,16 +1,16 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, TextInput} from 'react-native-paper';
-import {UndongItemType} from '../../types/undong';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeParamList, TabParamList} from '../../routes';
 import {WIDTH} from '../../pages/home';
+import {ResponseUndongArrayData} from '../../types/Posts/posts';
 
 type undongProp = {
-  item: UndongItemType;
+  item: ResponseUndongArrayData;
   navigation: CompositeNavigationProp<
     BottomTabNavigationProp<TabParamList, 'Home', undefined>,
     NativeStackNavigationProp<HomeParamList, 'Play'>

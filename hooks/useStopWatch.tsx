@@ -76,6 +76,7 @@ export const useStopWatch = () => {
   const lap = () => {
     setLaps(v => [time, ...v]);
     setIsResting(false);
+    stop();
   };
   const rest = () => {
     setRestLaps(v => [time, ...v]);
@@ -131,14 +132,3 @@ export const useStopWatch = () => {
     fastestLapTime: formatMs(fastestLapTime || 0),
   };
 };
-
-// 1. 운동 타이머 서버로 포스트
-// 2. 유저 홈진입시 겟 모든 운동 + 리덕스상태에 추가
-// 3. 로컬스토리지에 authorization Token 저장 및 spalsh 자동로그인
-// 4. Multer 이미지 업로드 서비스 추가
-// 5. 달력 디자인 바꾸기
-
-// 6. 할수있으면 마지막으로 달력 아젠다로 바꾸기
-// 7. Aws 서버 코드 푸시
-
-// —————————— 8.31 마무리 ——————————

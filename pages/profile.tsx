@@ -95,6 +95,7 @@ function Complete() {
       );
       console.log(response);
       Alert.alert('알림', '완료처리 되었습니다.');
+      setImage(undefined);
       navigation.goBack();
       navigation.navigate('Home');
     } catch (error) {

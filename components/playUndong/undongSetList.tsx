@@ -52,6 +52,17 @@ export const LapList = ({
 }: LapListProps) => {
   return (
     <ScrollView style={styles.lapsContainer}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+        }}>
+        <Text style={styles.labname}>세트수</Text>
+        <Text style={styles.labname}>쉬는시간</Text>
+        <Text style={styles.labname}>운동시간</Text>
+      </View>
       {hasStarted && (
         <LapRow
           time={currentLapTime}
@@ -93,7 +104,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
+  labname: {
+    fontSize: 18,
+    fontWeight: '200',
+    color: '#fff',
+  },
   lapText: {
     fontSize: 18,
     fontVariant: ['tabular-nums'], // fixed width character

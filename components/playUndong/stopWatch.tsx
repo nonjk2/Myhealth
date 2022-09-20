@@ -1,17 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, {AxiosError} from 'axios';
 import React, {useCallback, useState} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Config from 'react-native-config';
 import {formatMs, useStopWatch} from '../../hooks/useStopWatch';
 import {useAppSelector} from '../../store';
 import {UndongPost} from '../../types/Posts/posts';
-import {UndongItemType} from '../../types/undong';
 import {MyButton} from '../../utils/myButton';
 import {LapList} from './undongSetList';
 
 type stopWatchProp = {
-  undongDetail: UndongItemType;
+  undongDetail: any;
   route: any;
   navigation: any;
 };
@@ -45,6 +51,9 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
       name: undongDetail.name,
       sets: laps,
     };
+    if (isRunning) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -68,6 +77,7 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
       setLoading(false);
     }
   }, [
+    isRunning,
     Token,
     laps,
     navigation,
@@ -75,6 +85,23 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
     undongDetail.name,
     undongDetail.startdate,
   ]);
+
+  const AlertBtn = (btn: string) => {
+    Alert.alert(
+      btn === 'reset' ? '초기화 하시겠습니까?' : '저장 하시겠습니까?',
+      '',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: btn === 'reset' ? '재설정' : '저장',
+          onPress: () => (btn === 'reset' ? reset() : savemyUndong()),
+        },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -85,21 +112,9 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
         <View style={styles.row}>
           <MyButton
             onPress={() => {
-              isRunning ? (isResting ? lap() : rest()) : reset();
+              isRunning ? (isResting ? lap() : rest()) : AlertBtn('save');
             }}
-            isRunning={isRunning}
-            theme={{
-              btnColor: '#80808035',
-              nagativeBtnColor: '#80808035',
-              textColor: '#ffffff',
-              nagativeTextColor: '#ffffff',
-            }}>
-            {isRunning ? (isResting ? '랩' : '쉬는시간') : '재설정'}
-          </MyButton>
-          <MyButton
-            onPress={() => {
-              savemyUndong();
-            }}
+            disabled={isRunning ? (isResting ? true : true) : false}
             isLoading={isLoading}
             isRunning={isRunning}
             theme={{
@@ -109,6 +124,19 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
               nagativeTextColor: 'rgb(124,252,0)',
             }}>
             {isRunning ? (isResting ? 'ON' : 'OFF') : '저장'}
+          </MyButton>
+          <MyButton
+            onPress={() => {
+              isRunning ? (isResting ? lap() : rest()) : AlertBtn('reset');
+            }}
+            isRunning={isRunning}
+            theme={{
+              btnColor: '#80808035',
+              nagativeBtnColor: '#80808035',
+              textColor: '#ffffff',
+              nagativeTextColor: '#ffffff',
+            }}>
+            {isRunning ? (isResting ? '세트기록' : '쉬는시간') : '재설정'}
           </MyButton>
           <MyButton
             onPress={() => {

@@ -89,14 +89,18 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
                   </View>
                 </Card.Content>
               ) : (
+                /**이미지일때 */
                 <Card.Cover
-                  source={{uri: `${Config.API_URI}/media/${item.imgUrl}`}}
+                  source={{
+                    uri: `https://${Config.AWS_S3_BUCKET_NAME}.s3.${Config.AWS_S3_REGION}.amazonaws.com/${item.imgUrl}`,
+                  }}
                   resizeMode={'contain'}
                 />
               )}
             </Card>
           </TouchableOpacity>
         )}
+        /** 아이템 왼쪽부분 (시간) */
         left={() =>
           toggle ? (
             <View
