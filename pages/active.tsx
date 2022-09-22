@@ -1,21 +1,23 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
-  Animated,
   FlatList,
   SafeAreaView,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {Dimensions, StyleSheet} from 'react-native';
 import {TabProps} from '../routes';
-import {Avatar, Card, Snackbar} from 'react-native-paper';
+import {Avatar, Snackbar} from 'react-native-paper';
 import {format} from 'date-fns';
-import {ko} from 'date-fns/locale';
 import Undong from '../components/playUndong/undong';
 import {useAppSelector} from '../store';
 import {useDispatch} from 'react-redux';
 import onToggle from '../slices/snack';
 import {ResponseUndongArrayData} from '../types/Posts/posts';
+import {ko} from 'date-fns/locale';
+import {HEIGHT} from './home';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -27,21 +29,10 @@ interface Props {
 }
 
 const ActivePage: React.FC<TabProps> = ({navigation}) => {
-  const [currentTime, setCurrentTime] = useState<string>(
-    format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko})
-  );
   const [undongData, setUndongData] = useState<ResponseUndongArrayData[]>([]);
-  const [clockToggle, setClockToggle] = useState<boolean>(true);
-  const neonAnimate = useRef<Animated.Value>(new Animated.Value(0)).current;
   const snackToggle = useAppSelector(state => state.snack.toggle);
+  const undongs = useAppSelector(state => state.exercise.undongs.undongs);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(format(new Date(), 'yyyy.MM.dd HH:mm:ss', {locale: ko}));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const renderUndong = useCallback(
     ({item}: {item: ResponseUndongArrayData}) => {
@@ -52,33 +43,46 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {clockToggle ? (
-        <Card style={styles.cardContainer}>
-          <Card.Content style={{alignItems: 'center'}}>
-            <Animated.Text
-              style={[
-                styles.neon,
-                {
-                  shadowOpacity: neonAnimate,
-                  shadowColor: 'cyan',
-                  color: 'cyan',
-                  fontSize: 25,
-                  lineHeight: 35,
-                },
-              ]}>
-              {currentTime.split(' ')[1].split(':')[0]}시{' '}
-              {currentTime.split(' ')[1].split(':')[1]}분{' '}
-              {currentTime.split(' ')[1].split(':')[2]}초
-            </Animated.Text>
-          </Card.Content>
-        </Card>
-      ) : null}
       <FlatList
-        data={undongData}
+        data={undongs.filter(
+          e =>
+            format(new Date(e.createdAt), 'yyyy-MM-dd') ===
+            format(Date.now(), 'yyyy-MM-dd')
+        )}
         keyExtractor={item => item.id}
         renderItem={renderUndong}
         style={{marginTop: 30}}
         extraData={undongData}
+        ListHeaderComponent={() => {
+          return (
+            <View style={styles.headerCompo}>
+              <Text style={styles.headerCompoFont}>
+                {format(Date.now(), 'yyyy년 MM월 dd일 EEE요일', {locale: ko})}
+              </Text>
+            </View>
+          );
+        }}
+        ListEmptyComponent={() => {
+          return (
+            <View
+              style={{
+                width: WIDTH,
+                height: HEIGHT * 0.7,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <IonIcon
+                name={'alert-circle'}
+                size={60}
+                color={'#fff'}
+                style={{marginBottom: 10}}
+              />
+              <Text style={{color: '#fff', fontWeight: '200'}}>
+                오늘 운동이 없습니다
+              </Text>
+            </View>
+          );
+        }}
       />
       <TouchableOpacity
         style={styles.plusbutton}
@@ -107,19 +111,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
           style={{backgroundColor: '#202020'}}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.toggleCurrentTime}
-        onPress={() => setClockToggle(prev => !prev)}>
-        <Avatar.Icon
-          color={'#fff'}
-          size={60}
-          icon={'clock'}
-          style={{backgroundColor: '#202020'}}
-        />
-      </TouchableOpacity>
-      <Text style={styles.toggleCurrentTimeOnoff}>
-        {clockToggle ? 'ON' : 'OFF'}
-      </Text>
+
       <Snackbar
         visible={snackToggle}
         onDismiss={() =>
@@ -162,6 +154,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  headerCompo: {paddingLeft: 20},
+  headerCompoFont: {color: '#fff', fontSize: 18},
   neon: {
     // shadowOpacity: 0.8,
     shadowRadius: 16,

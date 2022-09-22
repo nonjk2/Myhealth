@@ -7,7 +7,7 @@ import {
   getYear,
 } from 'date-fns';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {CalendarList, DateData, LocaleConfig} from 'react-native-calendars';
 import {HEIGHT, WIDTH} from '../pages/home';
 import {LOCALEKR} from '../src/data/calenderLocale';
@@ -21,6 +21,9 @@ import {
   BottomSheetSectionListMethods,
 } from '@gorhom/bottom-sheet';
 import {ko} from 'date-fns/locale';
+import DayComponent from './calenderDayCom';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+
 type Props = {
   date: Date;
   onChange: (value: Date) => void;
@@ -125,7 +128,7 @@ const WeekCalendar: React.FC<Props> = ({}) => {
             style={{
               flex: 1,
               borderBottomWidth: 1,
-              borderBottomColor: '#b4b4b4',
+              borderBottomColor: '#e1dfdf',
             }}
           />
           <View style={{flex: 1}} />
@@ -151,7 +154,6 @@ const WeekCalendar: React.FC<Props> = ({}) => {
           horizontal={true}
           onDayPress={day => {
             CalenderDayOnpress(day);
-            console.log(day);
           }}
           pagingEnabled={true}
           futureScrollRange={5}
@@ -165,67 +167,24 @@ const WeekCalendar: React.FC<Props> = ({}) => {
           showsHorizontalScrollIndicator={true}
           current={selecttoday.dateString}
           animateScroll={true}
-          // calendarStyle={{width: WIDTH}}
           dayComponent={({date, state, marking, onPress}: any) => {
             return (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => {
-                  onPress(date);
-                  state === 'disabled' ? null : handlePresentModalPress();
-                }}>
-                <View
-                  key={date.timestamp}
-                  style={[
-                    marking && {
-                      shadowOpacity: 1,
-                      shadowColor: 'cyan',
-                      shadowRadius: 16,
-                      backgroundColor: 'cyan',
-                    },
-                    {
-                      backgroundColor:
-                        state === 'disabled'
-                          ? '#000'
-                          : marking
-                          ? 'cyan'
-                          : '#fff',
-                      // width: 55,
-                      width: WIDTH * (1 / 7),
-                      height: HEIGHT * (1 / 8),
-                      // borderRadius: 5,
-                      opacity: 0.8,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      color:
-                        state === 'disabled'
-                          ? 'gray'
-                          : marking
-                          ? '#5585E8'
-                          : date.timestamp === selecttoday.timestamp
-                          ? 'red'
-                          : '#000',
-                      margin: 2,
-                    }}>
-                    {date.day}
-                  </Text>
-                  {state === 'today' ? (
-                    <View
-                      style={{
-                        backgroundColor: 'gray',
-                        alignItems: 'center',
-                        borderRadius: 2,
-                      }}>
-                      <Text style={{fontSize: 12, color: 'white'}}>Today</Text>
-                    </View>
-                  ) : null}
-                </View>
-              </TouchableOpacity>
+              <DayComponent
+                date={date}
+                state={state}
+                marking={marking}
+                onPress={onPress}
+                selecttoday={selecttoday}
+                handlePresentModalPress={handlePresentModalPress}
+              />
             );
           }}
-          headerStyle={{margin: 0, width: WIDTH}}
+          headerStyle={{
+            width: WIDTH,
+            marginVertical: 10,
+            paddingLeft: 0,
+            paddingRight: 0,
+          }}
           theme={{
             calendarBackground: '#202020',
             dayTextColor: '#fff',
@@ -235,8 +194,9 @@ const WeekCalendar: React.FC<Props> = ({}) => {
             indicatorColor: '#fff',
             inactiveDotColor: '#fff',
             weekVerticalMargin: 0,
+            textDayFontFamily: 'monospace',
+            textDayFontSize: 18,
           }}
-          // firstDay={1}
         />
 
         <BottomSheetModal
@@ -249,7 +209,6 @@ const WeekCalendar: React.FC<Props> = ({}) => {
           overDragResistanceFactor={2}>
           <BottomSheetSectionList
             ref={sectionListRef}
-            // ref={sectionListRef}
             sections={sections.filter(v => addSection.includes(v.title))} //
             keyExtractor={item => item.createdAt}
             renderItem={BottomSheetrenderItem}
@@ -260,15 +219,24 @@ const WeekCalendar: React.FC<Props> = ({}) => {
               return (
                 <View
                   style={{
+                    width: WIDTH,
+                    height: HEIGHT * 0.5,
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Text>운동을 하지않은날입니다</Text>
+                  <IonIcon
+                    name={'alert-circle'}
+                    size={60}
+                    color={'#000'}
+                    style={{marginBottom: 10}}
+                  />
+                  <Text style={{color: '#000', fontWeight: '200'}}>
+                    오늘 운동이 없습니다
+                  </Text>
                 </View>
               );
             }}
-            // inverted={true}
           />
         </BottomSheetModal>
       </View>

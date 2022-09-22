@@ -2,6 +2,7 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {
   CompositeScreenProps,
   NavigationContainer,
+  useNavigation,
 } from '@react-navigation/native';
 
 import {
@@ -22,6 +23,8 @@ import {useAppSelector} from './store';
 import Playpage from './pages/play';
 
 import {ResponseUndongArrayData} from './types/Posts/posts';
+import CameraPage from './pages/camera';
+import UndongStartButton from './components/playUndong/undongStartButton';
 
 const items = [
   {
@@ -39,6 +42,11 @@ const items = [
     label: '사진',
     inactiveIcon: 'camera-outline',
   },
+  {
+    activeIcon: 'person',
+    label: '프로필',
+    inactiveIcon: 'person-outline',
+  },
 ];
 
 export enum HomeScreens {
@@ -50,11 +58,15 @@ export enum TabScreens {
   Home = 'Home',
   Profile = 'Profile',
   Active = 'Active',
+  Camera = 'Camera',
+  Empty = 'Empty',
 }
 export type TabParamList = {
   Home: undefined;
   Active: undefined;
   Profile: undefined;
+  Camera: undefined;
+  Empty: undefined;
 };
 export type HomeParamList = {
   Auth: {setuser: Dispatch<SetStateAction<boolean>>};
@@ -72,15 +84,17 @@ export type TabProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Home'>,
   NativeStackScreenProps<HomeParamList>
 >;
-
+const EmptyScreenComponent = () => {
+  return null;
+};
 const Stack = createNativeStackNavigator<HomeParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 const TabNav = (): React.ReactElement => {
+  const navigation = useNavigation();
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          // position: 'relative',
           backgroundColor: '#85adfd',
           shadowOffset: {
             width: 0,
@@ -113,10 +127,26 @@ const TabNav = (): React.ReactElement => {
         }}
       />
       <Tab.Screen
+        name={TabScreens.Empty}
+        component={EmptyScreenComponent}
+        options={{
+          tabBarButton: () => <UndongStartButton navigation={navigation} />,
+        }}
+      />
+      <Tab.Screen
+        name={TabScreens.Camera}
+        component={CameraPage}
+        options={{
+          tabBarButton: props => <TabButton {...props} item={items[2]} />,
+          tabBarStyle: {backgroundColor: '#000', borderTopWidth: 0},
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
         name={TabScreens.Profile}
         component={ProfilePage}
         options={{
-          tabBarButton: props => <TabButton {...props} item={items[2]} />,
+          tabBarButton: props => <TabButton {...props} item={items[3]} />,
           tabBarStyle: {backgroundColor: '#000', borderTopWidth: 0},
           headerShown: false,
         }}

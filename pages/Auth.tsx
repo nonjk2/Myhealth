@@ -20,7 +20,6 @@ import {AuthProps} from '../routes';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import SplashScreen from 'react-native-splash-screen';
 
 const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
   const dispatch = useAppDispatch();
@@ -52,8 +51,6 @@ const Authpage: React.FC<AuthProps> = ({}: AuthProps) => {
         // if ((error as AxiosError).response?.data.code === 'expried') {
         //   console.log('토큰만료');
         // }
-      } finally {
-        SplashScreen.hide();
       }
     };
     getTokenAndAutoLogin();

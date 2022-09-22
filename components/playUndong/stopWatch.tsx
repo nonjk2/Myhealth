@@ -73,6 +73,9 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
     } catch (error) {
       // eslint-disable-next-line no-shadow
       const AxiosError = (error as AxiosError).response;
+      console.log(AxiosError);
+      console.log(error);
+      Alert.alert('에러!');
     } finally {
       setLoading(false);
     }

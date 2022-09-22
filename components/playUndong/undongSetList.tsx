@@ -27,7 +27,7 @@ const LapRow = ({
       <Card.Content>
         <View style={rowStyles}>
           <Title>{lap}set</Title>
-          <Text style={styles.lapText}>{currentRestTime}</Text>
+          <Text style={styles.restText}>{currentRestTime}</Text>
           <Text style={styles.lapText}>{time}</Text>
         </View>
       </Card.Content>
@@ -112,5 +112,10 @@ const styles = StyleSheet.create({
   lapText: {
     fontSize: 18,
     fontVariant: ['tabular-nums'], // fixed width character
+  },
+  restText: {
+    fontSize: 18,
+    color: 'red',
+    fontVariant: ['tabular-nums'],
   },
 });
