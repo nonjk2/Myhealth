@@ -177,7 +177,15 @@ export const AppNav = (): React.ReactElement => {
         <Stack.Screen
           name={HomeScreens.Play}
           component={Playpage}
-          options={{headerShown: false}}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#202020',
+            },
+            headerTitleStyle: {
+              color: 'white',
+            },
+          }}
         />
         {/* <Stack.Screen name={HomeScreens.Home} component={TabNav} /> */}
       </Stack.Navigator>

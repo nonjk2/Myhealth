@@ -1,23 +1,17 @@
 import React, {useCallback, useState} from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, Pressable, SafeAreaView, Text, View} from 'react-native';
 import {Dimensions, StyleSheet} from 'react-native';
 import {TabProps} from '../routes';
-import {Avatar, Snackbar} from 'react-native-paper';
+import {Card, Snackbar, TextInput} from 'react-native-paper';
 import {format} from 'date-fns';
 import Undong from '../components/playUndong/undong';
-import {useAppSelector} from '../store';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store';
 import onToggle from '../slices/snack';
 import {ResponseUndongArrayData} from '../types/Posts/posts';
 import {ko} from 'date-fns/locale';
 import {HEIGHT} from './home';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {Myborder} from '../utils/myBorderLayout';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -29,10 +23,11 @@ interface Props {
 }
 
 const ActivePage: React.FC<TabProps> = ({navigation}) => {
-  const [undongData, setUndongData] = useState<ResponseUndongArrayData[]>([]);
+  const [undongData] = useState<ResponseUndongArrayData[]>([]);
+  const [undongName, setUndongName] = useState<string>('');
   const snackToggle = useAppSelector(state => state.snack.toggle);
   const undongs = useAppSelector(state => state.exercise.undongs.undongs);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const renderUndong = useCallback(
     ({item}: {item: ResponseUndongArrayData}) => {
@@ -41,8 +36,84 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
     [navigation]
   );
 
+  const OnchangeName = useCallback(
+    (text: string) => {
+      setUndongName(text);
+    },
+    [setUndongName]
+  );
+
+  // const EraseText = useCallback(() => {
+  //   setUndongDetail({...undongDetail, name: ''});
+  // }, [undongDetail]);
+
+  const getStartUndong = useCallback(() => {
+    const undongDetail: ResponseUndongArrayData = {
+      startdate: format(Date.now(), 'HH:mm'),
+      name: undongName,
+      sets: [],
+      __v: 0,
+      _id: '',
+      activetime: '',
+      createdAt: '',
+      id: '',
+      myid: '',
+      updatedAt: '',
+    };
+    navigation.navigate('Play', {undongDetail: undongDetail});
+    setUndongName('');
+  }, [undongName, navigation]);
   return (
     <SafeAreaView style={styles.container}>
+      {/* 운동 시작 카드 */}
+      <Myborder title="운동 시작" />
+      <Card style={{margin: 10}}>
+        <View
+          style={{
+            height: HEIGHT * 0.15,
+            backgroundColor: '#202020',
+          }}>
+          <TextInput
+            onChangeText={text => OnchangeName(text)}
+            value={undongName}
+            mode={'outlined'}
+            style={{margin: 2}}
+            theme={{
+              colors: {
+                placeholder: '#b8b7b7',
+                text: 'white',
+                primary: '#bf5f5f',
+                background: '#202020',
+              },
+            }}
+            placeholderTextColor={'green'}
+            label={'운동이름'}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              padding: 15,
+            }}>
+            <Pressable
+              disabled={undongName.length === 0}
+              onPress={() => {
+                getStartUndong();
+              }}>
+              <Text
+                style={{
+                  color: undongName.length === 0 ? '#797777' : '#fff',
+                  fontSize: 16,
+                  fontWeight: '400',
+                }}>
+                시작하기
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Card>
+      {/* 오늘의 운동 */}
+      <Myborder title={'오늘의 운동'} />
       <FlatList
         data={undongs.filter(
           e =>
@@ -84,34 +155,7 @@ const ActivePage: React.FC<TabProps> = ({navigation}) => {
           );
         }}
       />
-      <TouchableOpacity
-        style={styles.plusbutton}
-        onPress={() =>
-          setUndongData([
-            ...undongData,
-            {
-              startdate: format(Date.now(), 'HH:mm'),
-              name: '',
-              // reps: [],
-              sets: [],
-              __v: 0,
-              _id: '',
-              activetime: '',
-              createdAt: '',
-              id: '',
-              myid: '',
-              updatedAt: '',
-            },
-          ])
-        }>
-        <Avatar.Icon
-          color={'#fff'}
-          size={60}
-          icon={'plus'}
-          style={{backgroundColor: '#202020'}}
-        />
-      </TouchableOpacity>
-
+      {/* 알림창 */}
       <Snackbar
         visible={snackToggle}
         onDismiss={() =>
@@ -136,11 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#202020',
   },
-  plusbutton: {
-    position: 'absolute',
-    top: '5%',
-    left: '85%',
-  },
+
   toggleCurrentTime: {
     position: 'absolute',
     top: '5%',
@@ -156,11 +196,6 @@ const styles = StyleSheet.create({
   },
   headerCompo: {paddingLeft: 20},
   headerCompoFont: {color: '#fff', fontSize: 18},
-  neon: {
-    // shadowOpacity: 0.8,
-    shadowRadius: 16,
-    fontWeight: '700',
-  },
   neonTimeOne: {},
   itemLabel: {
     alignSelf: 'center',

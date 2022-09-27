@@ -10,6 +10,7 @@ import {
   ResponseImgArrayData,
   ResponseUndongArrayData,
 } from '../types/Posts/posts';
+import ImageModal from 'react-native-image-modal';
 
 type MyItem = ResponseUndongArrayData | ResponseImgArrayData; //
 
@@ -90,12 +91,25 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
                 </Card.Content>
               ) : (
                 /**이미지일때 */
-                <Card.Cover
-                  source={{
-                    uri: `https://${Config.AWS_S3_BUCKET_NAME}.s3.${Config.AWS_S3_REGION}.amazonaws.com/${item.imgUrl}`,
-                  }}
-                  resizeMode={'contain'}
-                />
+                <Card.Content>
+                  <ImageModal
+                    style={{
+                      width: 250,
+                      height: 250,
+                    }}
+                    resizeMode="contain"
+                    imageBackgroundColor="#000000"
+                    source={{
+                      uri: `https://${Config.AWS_S3_BUCKET_NAME}.s3.${Config.AWS_S3_REGION}.amazonaws.com/${item.imgUrl}`,
+                    }}
+                  />
+                </Card.Content>
+                // <Card.Cover
+                //   source={{
+                //     uri: `https://${Config.AWS_S3_BUCKET_NAME}.s3.${Config.AWS_S3_REGION}.amazonaws.com/${item.imgUrl}`,
+                //   }}
+                //   resizeMode={'contain'}
+                // />
               )}
             </Card>
           </TouchableOpacity>

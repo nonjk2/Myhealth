@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Card, TextInput} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {CompositeNavigationProp} from '@react-navigation/native';
@@ -16,7 +16,7 @@ type undongProp = {
     NativeStackNavigationProp<HomeParamList, 'Play'>
   >;
 };
-const Undong: React.FC<undongProp> = ({navigation, item}) => {
+const Undong: React.FC<undongProp> = ({item}) => {
   const [undongDetail, setUndongDetail] = useState(item);
   const OnchangeName = useCallback(
     (text: any) => {
@@ -24,14 +24,22 @@ const Undong: React.FC<undongProp> = ({navigation, item}) => {
     },
     [undongDetail]
   );
-  const EraseText = useCallback(() => {
-    setUndongDetail({...undongDetail, name: ''});
-  }, [undongDetail]);
+  const refreshName = useCallback(() => {
+    setUndongDetail(item);
+  }, [item]);
+
+  // 업데이트 //
+
+  // const updateUndong = useCallback(()=> {},[]);
+
+  // 삭제 //
+
+  // const deleateUndong = useCallback(()=> {}, []);
   return (
     <View style={styles.itemView}>
       <Card style={[styles.toggleOnCard]}>
         <Card.Content style={{backgroundColor: '#202020'}}>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <View style={{flexDirection: 'row'}}>
             <TextInput
               mode="outlined"
               onChangeText={text => OnchangeName(text)}
@@ -39,25 +47,22 @@ const Undong: React.FC<undongProp> = ({navigation, item}) => {
               style={styles.nameTextInput}
               theme={{
                 colors: {
-                  placeholder: 'white',
+                  placeholder:
+                    undongDetail.name === item.name ? '#b8b7b7' : 'red',
                   text: 'white',
-                  primary: 'white',
+                  primary: undongDetail.name === item.name ? 'white' : 'red',
                   background: '#202020',
                 },
               }}
-              underlineColor={'#fff'}
-              selectionColor={'#fff'}
-              placeholderTextColor={'#fff'}
-              activeOutlineColor={'#fff'}
-              activeUnderlineColor={'#fff'}
+              // activeUnderlineColor={'red'}
+              // activeOutlineColor={'red'}
               label="운동이름"
-              outlineColor="#fff"
               right={
                 undongDetail.name ? (
                   <TextInput.Icon
-                    name="close"
+                    name="refresh"
                     color="white"
-                    onPress={EraseText}
+                    onPress={refreshName}
                   />
                 ) : null
               }
@@ -66,25 +71,32 @@ const Undong: React.FC<undongProp> = ({navigation, item}) => {
               style={{
                 alignItems: 'center',
                 flexDirection: 'row',
+                paddingLeft: 15,
               }}>
               <IonIcon
                 name={'close'}
                 color={'#fff'}
-                size={28}
-                style={{marginHorizontal: 10}}
+                size={24}
+                style={{marginHorizontal: 5, marginLeft: 15}}
+                onPress={() => {
+                  // deleateUndong();
+                }}
               />
               <IonIcon
-                name={'play'}
-                color={undongDetail.name?.length === 0 ? '#3c3c3c' : '#fff'}
-                size={28}
+                name={'build'}
+                color={undongDetail.name === item.name ? '#3c3c3c' : '#fff'}
+                size={20}
                 style={{marginHorizontal: 5}}
                 onPress={() => {
-                  navigation.navigate('Play', {
-                    undongDetail: undongDetail,
-                  });
+                  // deleteUndong();
                 }}
               />
             </View>
+          </View>
+          <View style={{alignItems: 'center', top: 10}}>
+            {undongDetail.name === item.name ? null : (
+              <Text style={{color: 'white'}}>수정중</Text>
+            )}
           </View>
         </Card.Content>
       </Card>

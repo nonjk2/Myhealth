@@ -12,6 +12,8 @@ import {RootState} from '../store/reducer';
 import {TabParamList} from '../routes';
 import {HEIGHT, WIDTH} from './home';
 import {MyButton} from '../utils/myButton';
+import {useAppDispatch} from '../store';
+import exerciseSlice from '../slices/exercise';
 
 function CameraPage() {
   // const dispatch = useAppDispatch();
@@ -26,7 +28,9 @@ function CameraPage() {
   /** 이미지 프리뷰 */
   const [preview, setPreview] = useState<{uri: string}>();
   const accessToken = useSelector((state: RootState) => state.user.AccessToken);
+  const dispatch = useAppDispatch();
   /** 이미지 선택시 이미지 리사이저 */
+
   const onResponse = useCallback(async (response: any) => {
     console.log(response.width, response.height, response.exif);
 
@@ -76,6 +80,19 @@ function CameraPage() {
   }, [onResponse]);
 
   const onComplete = useCallback(async () => {
+    const getMyUndongs = async () => {
+      try {
+        const response = await axios.get(`${Config.API_URI}/undongs`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        dispatch(exerciseSlice.actions.setUndongs({undongs: response.data}));
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     if (!image) {
       Alert.alert('알림', '파일을 업로드해주세요.');
       return;
@@ -96,6 +113,7 @@ function CameraPage() {
       console.log(response);
       Alert.alert('알림', '완료처리 되었습니다.');
       setImage(undefined);
+      getMyUndongs();
       navigation.goBack();
       navigation.navigate('Home');
     } catch (error) {
@@ -104,7 +122,7 @@ function CameraPage() {
         console.log('error');
       }
     }
-  }, [navigation, image, accessToken]);
+  }, [image, accessToken, dispatch, navigation]);
 
   return (
     <SafeAreaView style={styles.profileContainer}>
