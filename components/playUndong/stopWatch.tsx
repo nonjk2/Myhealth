@@ -67,6 +67,7 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
           },
         }
       );
+      console.log(myPostData);
       console.log(response);
       navigation.navigate('Active');
       setLoading(false);
@@ -110,7 +111,7 @@ const StopWatch: React.FC<stopWatchProp> = ({route, navigation}) => {
     <SafeAreaView style={{flex: 1}}>
       <StatusBar />
       <View style={styles.container}>
-        <Text style={styles.timeText}>{time}</Text>
+        <Text style={styles.timeText}>{formatMs(time)}</Text>
 
         <View style={styles.row}>
           <MyButton

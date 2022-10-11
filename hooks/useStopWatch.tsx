@@ -111,7 +111,7 @@ export const useStopWatch = () => {
     start,
     stop,
     isRunning,
-    time: formatMs(time),
+    time: time,
     reset,
     rest,
     isResting,

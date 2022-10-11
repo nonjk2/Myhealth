@@ -2,7 +2,7 @@ export type UndongPost = {
   startdate: string;
   enddate: string;
   name: string;
-  activetime: string;
+  activetime: number;
   sets: LapData[];
 };
 
@@ -20,7 +20,7 @@ export type RequestLapData = {
   activetime: string;
 };
 export type ResponseUndongData = {
-  activetime: string;
+  activetime: number;
   createdAt: string;
   id: string;
   myid: string;
@@ -34,7 +34,7 @@ export type ResponseUndongData = {
 
 export type ResponseUndongArrayData = {
   type?: 'undong';
-  activetime: string;
+  activetime: number;
   createdAt: string;
   id: string;
   myid: string;

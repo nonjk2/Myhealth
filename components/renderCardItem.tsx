@@ -104,12 +104,6 @@ const RenderCard: React.FC<CardProp> = ({item}) => {
                     }}
                   />
                 </Card.Content>
-                // <Card.Cover
-                //   source={{
-                //     uri: `https://${Config.AWS_S3_BUCKET_NAME}.s3.${Config.AWS_S3_REGION}.amazonaws.com/${item.imgUrl}`,
-                //   }}
-                //   resizeMode={'contain'}
-                // />
               )}
             </Card>
           </TouchableOpacity>

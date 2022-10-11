@@ -7,7 +7,7 @@ export type UndongType = {
   reps?: [] | undefined;
   sets?: [] | LapData;
   enddate: string;
-  ActiveTime: string | undefined;
+  ActiveTime: number | undefined;
   createType: string;
 }[];
 
@@ -18,6 +18,6 @@ export type UndongItemType = {
   reps?: [] | undefined;
   sets?: [] | LapData;
   enddate: string;
-  ActiveTime: string | undefined;
+  ActiveTime: number | undefined;
   createType: string;
 };
